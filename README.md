@@ -28,4 +28,4 @@ cd Karabiner-VirtualHIDDevice
 make
 ```
 
-The `make` script will create a redistributable **Karabiner-Elements-VERSION.dmg** in the current directory.
+The `make` script will create a redistributable kexts into `dist` directory.
