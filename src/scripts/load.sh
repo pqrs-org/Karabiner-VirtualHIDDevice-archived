@@ -12,7 +12,7 @@ for kext in VirtualHIDManager.kext VirtualHIDPointing.kext; do
     cp -R "build/Release/$kext" $targetdir
 done
 
-bash ../../../../scripts/codesign.sh $targetdir
+bash ../scripts/codesign.sh $targetdir
 sudo chown -R root:wheel $targetdir
 
 for kext in VirtualHIDManager.kext VirtualHIDPointing.kext; do
