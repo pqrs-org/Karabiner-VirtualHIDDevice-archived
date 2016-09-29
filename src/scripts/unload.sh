@@ -3,8 +3,12 @@
 PATH=/bin:/sbin:/usr/bin:/usr/sbin; export PATH
 
 # --------------------------------------------------
-sudo kextunload -b org.pqrs.driver.VirtualHIDManager
+if kextstat | grep -q org.pqrs.driver.VirtualHIDManager; then
+    sudo kextunload -b org.pqrs.driver.VirtualHIDManager || exit 1
+fi
 
-sudo kextunload -b org.pqrs.driver.VirtualHIDPointing
+if kextstat | grep -q org.pqrs.driver.VirtualHIDPointing; then
+    sudo kextunload -b org.pqrs.driver.VirtualHIDPointing || exit 1
+fi
 
 exit 0
