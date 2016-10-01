@@ -2,6 +2,7 @@
 
 // Do not use <cstring> for kext
 #include <string.h>
+#include <stdint.h>
 
 namespace pqrs {
 namespace karabiner_virtualhiddevice {
