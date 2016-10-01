@@ -17,17 +17,18 @@ int main(int argc, const char* argv[]) {
     std::cerr << "virtual_pointing_example requires root privilege." << std::endl;
   }
 
+  kern_return_t kr;
+  io_connect_t connect = IO_OBJECT_NULL;
   auto service = IOServiceGetMatchingService(kIOMasterPortDefault, IOServiceNameMatching("org_pqrs_driver_VirtualHIDManager"));
   if (!service) {
     std::cerr << "IOServiceGetMatchingService error" << std::endl;
-    return 1;
+    goto finish;
   }
 
-  io_connect_t connect = IO_OBJECT_NULL;
-  auto kr = IOServiceOpen(service, mach_task_self(), kIOHIDServerConnectType, &connect);
+  kr = IOServiceOpen(service, mach_task_self(), kIOHIDServerConnectType, &connect);
   if (kr != KERN_SUCCESS) {
     std::cerr << "IOServiceOpen error" << std::endl;
-    return 1;
+    goto finish;
   }
 
   for (int i = 0; i < 400; ++i) {
@@ -44,6 +45,14 @@ int main(int argc, const char* argv[]) {
     }
 
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
+  }
+
+finish:
+  if (connect) {
+    IOServiceClose(connect);
+  }
+  if (service) {
+    IOObjectRelease(service);
   }
 
   return 0;
