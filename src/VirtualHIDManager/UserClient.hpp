@@ -1,7 +1,7 @@
 #pragma once
 
 #include "VirtualHIDManager.hpp"
-#include "karabiner_virtualhiddevice.h"
+#include "karabiner_virtualhiddevice.hpp"
 
 class org_pqrs_driver_VirtualHIDManager_UserClient final : public IOUserClient {
   OSDeclareDefaultStructors(org_pqrs_driver_VirtualHIDManager_UserClient);
@@ -16,9 +16,9 @@ public:
 
 private:
   static IOReturn staticPointingInputReportCallback(org_pqrs_driver_VirtualHIDManager_UserClient* target, void* reference, IOExternalMethodArguments* arguments);
-  IOReturn pointingInputReportCallback(const karabiner_virtualhiddevice_hid_pointing_input_report& input);
+  IOReturn pointingInputReportCallback(const pqrs::karabiner_virtualhiddevice::hid_report::pointing_input& input);
 
-  static IOExternalMethodDispatch methods_[static_cast<size_t>(karabiner_virtualhiddevice_user_client_method_end_)];
+  static IOExternalMethodDispatch methods_[static_cast<size_t>(pqrs::karabiner_virtualhiddevice::user_client_method::end_)];
   task_t owner_;
   org_pqrs_driver_VirtualHIDManager* provider_;
 };

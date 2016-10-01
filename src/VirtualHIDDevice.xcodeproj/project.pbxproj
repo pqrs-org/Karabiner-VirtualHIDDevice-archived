@@ -14,7 +14,7 @@
 		345437061D41204200CE355E /* VirtualHIDManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 345437051D41204200CE355E /* VirtualHIDManager.cpp */; };
 		3454370C1D4120AC00CE355E /* UserClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3454370A1D4120AC00CE355E /* UserClient.cpp */; };
 		3454370D1D4120AC00CE355E /* UserClient.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 3454370B1D4120AC00CE355E /* UserClient.hpp */; };
-		34F79B8E1D9F99FA008A084E /* karabiner_virtualhiddevice.h in Headers */ = {isa = PBXBuildFile; fileRef = 34F79B8D1D9F99FA008A084E /* karabiner_virtualhiddevice.h */; };
+		34D2FC861D9D1CB500168D20 /* karabiner_virtualhiddevice.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 34D2FC851D9D1CB500168D20 /* karabiner_virtualhiddevice.hpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,7 +30,7 @@
 		3454370A1D4120AC00CE355E /* UserClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UserClient.cpp; sourceTree = "<group>"; };
 		3454370B1D4120AC00CE355E /* UserClient.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = UserClient.hpp; sourceTree = "<group>"; };
 		3495C6921D3D8CBE007CB9E7 /* DiagnosticMacros.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = DiagnosticMacros.hpp; path = share/DiagnosticMacros.hpp; sourceTree = "<group>"; };
-		34F79B8D1D9F99FA008A084E /* karabiner_virtualhiddevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = karabiner_virtualhiddevice.h; path = ../../include/karabiner_virtualhiddevice.h; sourceTree = "<group>"; };
+		34D2FC851D9D1CB500168D20 /* karabiner_virtualhiddevice.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = karabiner_virtualhiddevice.hpp; path = ../../include/karabiner_virtualhiddevice.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,7 +54,7 @@
 		340E33FB1D470D9B00CF7785 /* include */ = {
 			isa = PBXGroup;
 			children = (
-				34F79B8D1D9F99FA008A084E /* karabiner_virtualhiddevice.h */,
+				34D2FC851D9D1CB500168D20 /* karabiner_virtualhiddevice.hpp */,
 				340E33FC1D470DA200CF7785 /* ServiceDetector.hpp */,
 			);
 			name = include;
@@ -125,9 +125,9 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				34F79B8E1D9F99FA008A084E /* karabiner_virtualhiddevice.h in Headers */,
 				3454370D1D4120AC00CE355E /* UserClient.hpp in Headers */,
 				345437041D41204200CE355E /* VirtualHIDManager.hpp in Headers */,
+				34D2FC861D9D1CB500168D20 /* karabiner_virtualhiddevice.hpp in Headers */,
 				340E33FD1D470DA200CF7785 /* ServiceDetector.hpp in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
