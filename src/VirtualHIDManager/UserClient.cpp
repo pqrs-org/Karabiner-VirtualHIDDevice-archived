@@ -11,12 +11,12 @@ END_IOKIT_INCLUDE;
 
 OSDefineMetaClassAndStructors(org_pqrs_driver_VirtualHIDManager_UserClient, IOUserClient);
 
-IOExternalMethodDispatch org_pqrs_driver_VirtualHIDManager_UserClient::methods_[static_cast<size_t>(pqrs::karabiner_virtualhiddevice::user_client_method::end_)] = {
+IOExternalMethodDispatch org_pqrs_driver_VirtualHIDManager_UserClient::methods_[static_cast<size_t>(karabiner_virtualhiddevice_user_client_method_end_)] = {
     {
         // pointing_input_report
         reinterpret_cast<IOExternalMethodAction>(&staticPointingInputReportCallback), // Method pointer.
         0,                                                                            // One scalar input value.
-        sizeof(pqrs::karabiner_virtualhiddevice::hid_report::pointing_input),         // No struct input value.
+        sizeof(karabiner_virtualhiddevice_hid_pointing_input_report),                 // No struct input value.
         0,                                                                            // No scalar output value.
         0                                                                             // No struct output value.
     },
@@ -45,7 +45,7 @@ IOReturn org_pqrs_driver_VirtualHIDManager_UserClient::clientClose(void) {
   IOLog("%s\n", __PRETTY_FUNCTION__);
 
   // clear input events.
-  pqrs::karabiner_virtualhiddevice::hid_report::pointing_input report;
+  karabiner_virtualhiddevice_hid_pointing_input_report report;
   pointingInputReportCallback(report);
 
   return super::clientClose();
@@ -67,7 +67,7 @@ bool org_pqrs_driver_VirtualHIDManager_UserClient::start(IOService* provider) {
 
 IOReturn org_pqrs_driver_VirtualHIDManager_UserClient::externalMethod(uint32_t selector, IOExternalMethodArguments* arguments,
                                                                       IOExternalMethodDispatch* dispatch, OSObject* target, void* reference) {
-  if (selector >= static_cast<uint32_t>(pqrs::karabiner_virtualhiddevice::user_client_method::end_)) {
+  if (selector >= static_cast<uint32_t>(karabiner_virtualhiddevice_user_client_method_end_)) {
     return kIOReturnUnsupported;
   }
 
@@ -89,14 +89,14 @@ IOReturn org_pqrs_driver_VirtualHIDManager_UserClient::staticPointingInputReport
     return kIOReturnBadArgument;
   }
 
-  if (auto input = static_cast<const pqrs::karabiner_virtualhiddevice::hid_report::pointing_input*>(arguments->structureInput)) {
+  if (auto input = static_cast<const karabiner_virtualhiddevice_hid_pointing_input_report*>(arguments->structureInput)) {
     return target->pointingInputReportCallback(*input);
   }
 
   return kIOReturnBadArgument;
 }
 
-IOReturn org_pqrs_driver_VirtualHIDManager_UserClient::pointingInputReportCallback(const pqrs::karabiner_virtualhiddevice::hid_report::pointing_input& input) {
+IOReturn org_pqrs_driver_VirtualHIDManager_UserClient::pointingInputReportCallback(const karabiner_virtualhiddevice_hid_pointing_input_report& input) {
   if (!provider_) {
     return kIOReturnError;
   }
