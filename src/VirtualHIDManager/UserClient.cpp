@@ -1,6 +1,7 @@
 #include "DiagnosticMacros.hpp"
 
 BEGIN_IOKIT_INCLUDE;
+#include <IOKit/IOBufferMemoryDescriptor.h>
 #include <IOKit/IOLib.h>
 #include <IOKit/IOUserClient.h>
 END_IOKIT_INCLUDE;
@@ -121,12 +122,10 @@ IOReturn org_pqrs_driver_VirtualHIDManager_UserClient::pointingInputReportCallba
     return kIOReturnError;
   }
 
-  if (auto pointing = provider_->getVirtualHIDPointing()) {
-    if (auto report = IOBufferMemoryDescriptor::withBytes(&input, sizeof(input), kIODirectionNone)) {
-      auto result = pointing->handleReport(report, kIOHIDReportTypeInput, kIOHIDOptionsTypeNone);
-      report->release();
-      return result;
-    }
+  if (auto report = IOBufferMemoryDescriptor::withBytes(&input, sizeof(input), kIODirectionNone)) {
+    auto result = provider_->handleHIDPointingReport(report);
+    report->release();
+    return result;
   }
 
   return kIOReturnError;

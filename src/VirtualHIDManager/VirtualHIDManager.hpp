@@ -16,28 +16,15 @@ public:
   virtual bool start(IOService* provider) override;
   virtual void stop(IOService* provider) override;
 
-  void attachClient(void) {
-    ++attachedClientCount_;
-    IOLog("attachClient attachedClientCount_ %zu\n", attachedClientCount_);
-  }
+  void attachClient(void);
+  void detachClient(void);
 
-  void detachClient(void) {
-    if (attachedClientCount_ > 0) {
-      --attachedClientCount_;
-    }
-    IOLog("detachClient attachedClientCount_ %zu\n", attachedClientCount_);
-  }
-
-  org_pqrs_driver_VirtualHIDPointing* getVirtualHIDPointing(void) {
-    if (!virtualHIDPointingDetector_) {
-      return nullptr;
-    }
-    return OSDynamicCast(org_pqrs_driver_VirtualHIDPointing, virtualHIDPointingDetector_->getService());
-  }
+  IOReturn handleHIDPointingReport(IOMemoryDescriptor* report);
 
 private:
-#include "include/ServiceDetector.hpp"
+  void createVirtualHIDPointing(void);
+  void terminateVirtualHIDPointing(void);
 
   size_t attachedClientCount_;
-  ServiceDetector* virtualHIDPointingDetector_;
+  org_pqrs_driver_VirtualHIDPointing* virtualHIDPointing_;
 };

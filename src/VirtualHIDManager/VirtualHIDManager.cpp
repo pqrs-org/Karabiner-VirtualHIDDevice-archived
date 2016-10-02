@@ -9,7 +9,7 @@ bool org_pqrs_driver_VirtualHIDManager::init(OSDictionary* dict) {
   }
 
   attachedClientCount_ = 0;
-  virtualHIDPointingDetector_ = new ServiceDetector();
+  virtualHIDPointing_ = nullptr;
 
   if (auto serialNumber = OSString::withCString("org.pqrs.driver.VirtualHIDManager")) {
     setProperty(kIOHIDSerialNumberKey, serialNumber);
@@ -20,21 +20,12 @@ bool org_pqrs_driver_VirtualHIDManager::init(OSDictionary* dict) {
 }
 
 void org_pqrs_driver_VirtualHIDManager::free(void) {
-  if (virtualHIDPointingDetector_) {
-    delete virtualHIDPointingDetector_;
-    virtualHIDPointingDetector_ = nullptr;
-  }
-
   super::free();
 }
 
 bool org_pqrs_driver_VirtualHIDManager::start(IOService* provider) {
   if (!super::start(provider)) {
     return false;
-  }
-
-  if (virtualHIDPointingDetector_) {
-    virtualHIDPointingDetector_->setNotifier("org_pqrs_driver_VirtualHIDPointing");
   }
 
   // Publish ourselves so clients can find us
@@ -48,7 +39,74 @@ bool org_pqrs_driver_VirtualHIDManager::start(IOService* provider) {
 }
 
 void org_pqrs_driver_VirtualHIDManager::stop(IOService* provider) {
-  if (virtualHIDPointingDetector_) {
-    virtualHIDPointingDetector_->unsetNotifier();
+}
+
+void org_pqrs_driver_VirtualHIDManager::attachClient(void) {
+  ++attachedClientCount_;
+
+  IOLog("org_pqrs_driver_VirtualHIDManager::attachClient attachedClientCount_ = %d\n", static_cast<int>(attachedClientCount_));
+
+  createVirtualHIDPointing();
+}
+
+void org_pqrs_driver_VirtualHIDManager::detachClient(void) {
+  if (attachedClientCount_ > 0) {
+    --attachedClientCount_;
   }
+
+  IOLog("org_pqrs_driver_VirtualHIDManager::detachClient attachedClientCount_ = %d\n", static_cast<int>(attachedClientCount_));
+
+  if (attachedClientCount_ == 0 && virtualHIDPointing_) {
+    terminateVirtualHIDPointing();
+  }
+}
+
+void org_pqrs_driver_VirtualHIDManager::createVirtualHIDPointing(void) {
+  if (virtualHIDPointing_) {
+    return;
+  }
+
+  // See IOHIDResourceDeviceUserClient::createAndStartDevice
+  virtualHIDPointing_ = OSTypeAlloc(org_pqrs_driver_VirtualHIDPointing);
+  if (!virtualHIDPointing_) {
+    return;
+  }
+
+  if (!virtualHIDPointing_->init(nullptr)) {
+    goto error;
+  }
+
+  if (!virtualHIDPointing_->attach(this)) {
+    goto error;
+  }
+
+  if (!virtualHIDPointing_->start(this)) {
+    virtualHIDPointing_->detach(this);
+    goto error;
+  }
+
+  return;
+
+error:
+  if (virtualHIDPointing_) {
+    virtualHIDPointing_->release();
+    virtualHIDPointing_ = nullptr;
+  }
+}
+
+void org_pqrs_driver_VirtualHIDManager::terminateVirtualHIDPointing(void) {
+  if (!virtualHIDPointing_) {
+    return;
+  }
+
+  virtualHIDPointing_->terminate();
+  virtualHIDPointing_->release();
+  virtualHIDPointing_ = nullptr;
+}
+
+IOReturn org_pqrs_driver_VirtualHIDManager::handleHIDPointingReport(IOMemoryDescriptor* report) {
+  if (virtualHIDPointing_) {
+    return virtualHIDPointing_->handleReport(report, kIOHIDReportTypeInput, kIOHIDOptionsTypeNone);
+  }
+  return kIOReturnError;
 }
