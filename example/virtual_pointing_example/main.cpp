@@ -8,9 +8,9 @@
 #include <IOKit/hid/IOHIDValue.h>
 #include <IOKit/hidsystem/IOHIDShared.h>
 #include <IOKit/hidsystem/ev_keymap.h>
+#include <cmath>
 #include <iostream>
 #include <thread>
-#include <cmath>
 
 int main(int argc, const char* argv[]) {
   if (getuid() != 0) {
