@@ -4,6 +4,8 @@
 OSDefineMetaClassAndStructors(org_pqrs_driver_VirtualHIDManager, IOService);
 
 bool org_pqrs_driver_VirtualHIDManager::init(OSDictionary* dict) {
+  IOLog("org_pqrs_driver_VirtualHIDManager::init\n");
+
   if (!super::init(dict)) {
     return false;
   }
@@ -20,10 +22,14 @@ bool org_pqrs_driver_VirtualHIDManager::init(OSDictionary* dict) {
 }
 
 void org_pqrs_driver_VirtualHIDManager::free(void) {
+  IOLog("org_pqrs_driver_VirtualHIDManager::free\n");
+
   super::free();
 }
 
 bool org_pqrs_driver_VirtualHIDManager::start(IOService* provider) {
+  IOLog("org_pqrs_driver_VirtualHIDManager::start\n");
+
   if (!super::start(provider)) {
     return false;
   }
@@ -39,6 +45,11 @@ bool org_pqrs_driver_VirtualHIDManager::start(IOService* provider) {
 }
 
 void org_pqrs_driver_VirtualHIDManager::stop(IOService* provider) {
+  IOLog("org_pqrs_driver_VirtualHIDManager::stop\n");
+
+  terminateVirtualHIDPointing();
+
+  super::stop(provider);
 }
 
 void org_pqrs_driver_VirtualHIDManager::attachClient(void) {
@@ -105,8 +116,9 @@ void org_pqrs_driver_VirtualHIDManager::terminateVirtualHIDPointing(void) {
 }
 
 IOReturn org_pqrs_driver_VirtualHIDManager::handleHIDPointingReport(IOMemoryDescriptor* report) {
-  if (virtualHIDPointing_) {
-    return virtualHIDPointing_->handleReport(report, kIOHIDReportTypeInput, kIOHIDOptionsTypeNone);
+  if (!virtualHIDPointing_) {
+    return kIOReturnError;
   }
-  return kIOReturnError;
+
+  return virtualHIDPointing_->handleReport(report, kIOHIDReportTypeInput, kIOHIDOptionsTypeNone);
 }
