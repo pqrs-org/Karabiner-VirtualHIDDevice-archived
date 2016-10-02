@@ -29,3 +29,16 @@ make
 ```
 
 The `make` script will create a redistributable kexts into `dist` directory.
+
+## Example
+
+An example is in `example/virtual_pointing_example`.
+
+### Usage
+
+Execute the following instructions in Terminal.
+
+1. Install VirtualHIDManager.kext by `make install` in the top directory.
+2. `cd example/virtual_pointing_example`
+3. `make`
+4. `make run`
