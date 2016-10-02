@@ -44,7 +44,7 @@ int main(int argc, const char* argv[]) {
       std::cerr << "IOConnectCallStructMethod error" << std::endl;
     }
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    std::this_thread::sleep_for(std::chrono::milliseconds(5));
   }
 
 finish:
