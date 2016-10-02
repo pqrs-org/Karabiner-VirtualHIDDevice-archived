@@ -8,6 +8,7 @@ bool org_pqrs_driver_VirtualHIDManager::init(OSDictionary* dict) {
     return false;
   }
 
+  attachedClientCount_ = 0;
   virtualHIDPointingDetector_ = new ServiceDetector();
 
   if (auto serialNumber = OSString::withCString("org.pqrs.driver.VirtualHIDManager")) {
