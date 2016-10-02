@@ -4,6 +4,7 @@ all: gitclean
 	rm -rf dist/org.pqrs.driver.VirtualHIDManager.kext
 	cp -R src/build/Release/VirtualHIDManager.kext dist/org.pqrs.driver.VirtualHIDManager.kext
 	bash ./scripts/codesign.sh dist
+	bash ./scripts/setpermissions.sh dist
 
 install:
 	bash ./src/scripts/unload.sh
