@@ -23,7 +23,7 @@ IOExternalMethodDispatch org_pqrs_driver_VirtualHIDManager_UserClient::methods_[
 };
 
 bool org_pqrs_driver_VirtualHIDManager_UserClient::initWithTask(task_t owningTask, void* securityToken, UInt32 type) {
-  IOLog("%s\n", __PRETTY_FUNCTION__);
+  IOLog("org_pqrs_driver_VirtualHIDManager_UserClient::initWithTask\n");
 
   if (clientHasPrivilege(owningTask, kIOClientPrivilegeAdministrator) != KERN_SUCCESS) {
     IOLog("%s Error: clientHasPrivilege failed.\n", __PRETTY_FUNCTION__);
@@ -41,17 +41,9 @@ bool org_pqrs_driver_VirtualHIDManager_UserClient::initWithTask(task_t owningTas
   return true;
 }
 
-IOReturn org_pqrs_driver_VirtualHIDManager_UserClient::clientClose(void) {
-  IOLog("%s\n", __PRETTY_FUNCTION__);
-
-  // clear input events.
-  pqrs::karabiner_virtualhiddevice::hid_report::pointing_input report;
-  pointingInputReportCallback(report);
-
-  return super::clientClose();
-}
-
 bool org_pqrs_driver_VirtualHIDManager_UserClient::start(IOService* provider) {
+  IOLog("org_pqrs_driver_VirtualHIDManager_UserClient::start\n");
+
   provider_ = OSDynamicCast(org_pqrs_driver_VirtualHIDManager, provider);
   if (!provider_) {
     IOLog("%s Error: provider_ == nullptr\n", __PRETTY_FUNCTION__);
@@ -62,7 +54,35 @@ bool org_pqrs_driver_VirtualHIDManager_UserClient::start(IOService* provider) {
     return false;
   }
 
+  provider_->attachClient();
+
   return true;
+}
+
+void org_pqrs_driver_VirtualHIDManager_UserClient::stop(IOService* provider) {
+  IOLog("org_pqrs_driver_VirtualHIDManager_UserClient::stop\n");
+
+  if (provider_) {
+    provider_->detachClient();
+  }
+
+  super::stop(provider);
+  provider_ = nullptr;
+}
+
+IOReturn org_pqrs_driver_VirtualHIDManager_UserClient::clientClose(void) {
+  IOLog("org_pqrs_driver_VirtualHIDManager_UserClient::clientClose\n");
+
+  // clear input events.
+  pqrs::karabiner_virtualhiddevice::hid_report::pointing_input report;
+  pointingInputReportCallback(report);
+
+  if (!terminate()) {
+    IOLog("%s Error: terminate failed.\n", __PRETTY_FUNCTION__);
+  }
+
+  // DON'T call super::clientClose, which just returns kIOReturnUnsupported.
+  return kIOReturnSuccess;
 }
 
 IOReturn org_pqrs_driver_VirtualHIDManager_UserClient::externalMethod(uint32_t selector, IOExternalMethodArguments* arguments,
