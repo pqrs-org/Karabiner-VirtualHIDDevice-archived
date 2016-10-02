@@ -1,8 +1,8 @@
 #pragma once
 
 // Do not use <cstring> for kext
-#include <string.h>
 #include <stdint.h>
+#include <string.h>
 
 namespace pqrs {
 namespace karabiner_virtualhiddevice {
