@@ -14,6 +14,14 @@ OSDefineMetaClassAndStructors(org_pqrs_driver_VirtualHIDManager_UserClient, IOUs
 
 IOExternalMethodDispatch org_pqrs_driver_VirtualHIDManager_UserClient::methods_[static_cast<size_t>(pqrs::karabiner_virtualhiddevice::user_client_method::end_)] = {
     {
+        // keyboard_input_report
+        reinterpret_cast<IOExternalMethodAction>(&staticKeyboardInputReportCallback), // Method pointer.
+        0,                                                                            // One scalar input value.
+        sizeof(pqrs::karabiner_virtualhiddevice::hid_report::keyboard_input),         // No struct input value.
+        0,                                                                            // No scalar output value.
+        0                                                                             // No struct output value.
+    },
+    {
         // pointing_input_report
         reinterpret_cast<IOExternalMethodAction>(&staticPointingInputReportCallback), // Method pointer.
         0,                                                                            // One scalar input value.
@@ -98,6 +106,37 @@ IOReturn org_pqrs_driver_VirtualHIDManager_UserClient::externalMethod(uint32_t s
   }
 
   return super::externalMethod(selector, arguments, dispatch, target, reference);
+}
+
+#pragma mark - keyboard_input_report
+
+IOReturn org_pqrs_driver_VirtualHIDManager_UserClient::staticKeyboardInputReportCallback(org_pqrs_driver_VirtualHIDManager_UserClient* target, void* reference, IOExternalMethodArguments* arguments) {
+  if (!target) {
+    return kIOReturnBadArgument;
+  }
+  if (!arguments) {
+    return kIOReturnBadArgument;
+  }
+
+  if (auto input = static_cast<const pqrs::karabiner_virtualhiddevice::hid_report::keyboard_input*>(arguments->structureInput)) {
+    return target->keyboardInputReportCallback(*input);
+  }
+
+  return kIOReturnBadArgument;
+}
+
+IOReturn org_pqrs_driver_VirtualHIDManager_UserClient::keyboardInputReportCallback(const pqrs::karabiner_virtualhiddevice::hid_report::keyboard_input& input) {
+  if (!provider_) {
+    return kIOReturnError;
+  }
+
+  if (auto report = IOBufferMemoryDescriptor::withBytes(&input, sizeof(input), kIODirectionNone)) {
+    auto result = provider_->handleHIDKeyboardReport(report);
+    report->release();
+    return result;
+  }
+
+  return kIOReturnError;
 }
 
 #pragma mark - pointing_input_report

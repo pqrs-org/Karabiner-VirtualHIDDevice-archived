@@ -11,6 +11,7 @@ bool org_pqrs_driver_VirtualHIDManager::init(OSDictionary* dict) {
   }
 
   attachedClientCount_ = 0;
+  virtualHIDKeyboard_ = nullptr;
   virtualHIDPointing_ = nullptr;
 
   if (auto serialNumber = OSString::withCString("org.pqrs.driver.VirtualHIDManager")) {
@@ -47,6 +48,7 @@ bool org_pqrs_driver_VirtualHIDManager::start(IOService* provider) {
 void org_pqrs_driver_VirtualHIDManager::stop(IOService* provider) {
   IOLog("org_pqrs_driver_VirtualHIDManager::stop\n");
 
+  terminateVirtualHIDKeyboard();
   terminateVirtualHIDPointing();
 
   super::stop(provider);
@@ -57,6 +59,7 @@ void org_pqrs_driver_VirtualHIDManager::attachClient(void) {
 
   IOLog("org_pqrs_driver_VirtualHIDManager::attachClient attachedClientCount_ = %d\n", static_cast<int>(attachedClientCount_));
 
+  createVirtualHIDKeyboard();
   createVirtualHIDPointing();
 }
 
@@ -67,52 +70,83 @@ void org_pqrs_driver_VirtualHIDManager::detachClient(void) {
 
   IOLog("org_pqrs_driver_VirtualHIDManager::detachClient attachedClientCount_ = %d\n", static_cast<int>(attachedClientCount_));
 
-  if (attachedClientCount_ == 0 && virtualHIDPointing_) {
-    terminateVirtualHIDPointing();
+  if (attachedClientCount_ == 0) {
+    if (virtualHIDKeyboard_) {
+      terminateVirtualHIDKeyboard();
+    }
+    if (virtualHIDPointing_) {
+      terminateVirtualHIDPointing();
+    }
   }
+}
+
+#define CREATE_VIRTUAL_DEVICE(CLASS, POINTER)                     \
+  {                                                               \
+    if (POINTER) {                                                \
+      return;                                                     \
+    }                                                             \
+                                                                  \
+    /* See IOHIDResourceDeviceUserClient::createAndStartDevice */ \
+    POINTER = OSTypeAlloc(CLASS);                                 \
+    if (!POINTER) {                                               \
+      return;                                                     \
+    }                                                             \
+                                                                  \
+    if (!POINTER->init(nullptr)) {                                \
+      goto error;                                                 \
+    }                                                             \
+                                                                  \
+    if (!POINTER->attach(this)) {                                 \
+      goto error;                                                 \
+    }                                                             \
+                                                                  \
+    if (!POINTER->start(this)) {                                  \
+      POINTER->detach(this);                                      \
+      goto error;                                                 \
+    }                                                             \
+                                                                  \
+    return;                                                       \
+                                                                  \
+  error:                                                          \
+    if (POINTER) {                                                \
+      POINTER->release();                                         \
+      POINTER = nullptr;                                          \
+    }                                                             \
+  }
+
+#define TERMINATE_VIRTUAL_DEVICE(POINTER) \
+  {                                       \
+    if (!POINTER) {                       \
+      return;                             \
+    }                                     \
+                                          \
+    POINTER->terminate();                 \
+    POINTER->release();                   \
+    POINTER = nullptr;                    \
+  }
+
+void org_pqrs_driver_VirtualHIDManager::createVirtualHIDKeyboard(void) {
+  CREATE_VIRTUAL_DEVICE(org_pqrs_driver_VirtualHIDKeyboard, virtualHIDKeyboard_);
 }
 
 void org_pqrs_driver_VirtualHIDManager::createVirtualHIDPointing(void) {
-  if (virtualHIDPointing_) {
-    return;
-  }
+  CREATE_VIRTUAL_DEVICE(org_pqrs_driver_VirtualHIDPointing, virtualHIDPointing_);
+}
 
-  // See IOHIDResourceDeviceUserClient::createAndStartDevice
-  virtualHIDPointing_ = OSTypeAlloc(org_pqrs_driver_VirtualHIDPointing);
-  if (!virtualHIDPointing_) {
-    return;
-  }
-
-  if (!virtualHIDPointing_->init(nullptr)) {
-    goto error;
-  }
-
-  if (!virtualHIDPointing_->attach(this)) {
-    goto error;
-  }
-
-  if (!virtualHIDPointing_->start(this)) {
-    virtualHIDPointing_->detach(this);
-    goto error;
-  }
-
-  return;
-
-error:
-  if (virtualHIDPointing_) {
-    virtualHIDPointing_->release();
-    virtualHIDPointing_ = nullptr;
-  }
+void org_pqrs_driver_VirtualHIDManager::terminateVirtualHIDKeyboard(void) {
+  TERMINATE_VIRTUAL_DEVICE(virtualHIDKeyboard_);
 }
 
 void org_pqrs_driver_VirtualHIDManager::terminateVirtualHIDPointing(void) {
-  if (!virtualHIDPointing_) {
-    return;
+  TERMINATE_VIRTUAL_DEVICE(virtualHIDPointing_);
+}
+
+IOReturn org_pqrs_driver_VirtualHIDManager::handleHIDKeyboardReport(IOMemoryDescriptor* report) {
+  if (!virtualHIDKeyboard_) {
+    return kIOReturnError;
   }
 
-  virtualHIDPointing_->terminate();
-  virtualHIDPointing_->release();
-  virtualHIDPointing_ = nullptr;
+  return virtualHIDKeyboard_->handleReport(report, kIOHIDReportTypeInput, kIOHIDOptionsTypeNone);
 }
 
 IOReturn org_pqrs_driver_VirtualHIDManager::handleHIDPointingReport(IOMemoryDescriptor* report) {
