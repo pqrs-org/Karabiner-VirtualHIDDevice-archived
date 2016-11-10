@@ -44,6 +44,8 @@ public:
 };
 
 enum class user_client_method {
+  terminate_virtual_hid_keyboard,
+  terminate_virtual_hid_pointing,
   keyboard_input_report,
   pointing_input_report,
   end_,
