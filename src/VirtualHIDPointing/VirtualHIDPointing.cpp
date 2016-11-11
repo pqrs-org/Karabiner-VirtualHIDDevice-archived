@@ -76,21 +76,15 @@ uint8_t reportDescriptor_[] = {
 
 bool org_pqrs_driver_VirtualHIDPointing::start(IOService* provider) {
   // set kIOHIDDeviceUsagePageKey
-  {
-    OSNumber* usagePage = OSNumber::withNumber(kHIDPage_GenericDesktop, 32);
-    if (usagePage) {
-      setProperty(kIOHIDDeviceUsagePageKey, usagePage);
-      usagePage->release();
-    }
+  if (auto usagePage = OSNumber::withNumber(kHIDPage_GenericDesktop, 32)) {
+    setProperty(kIOHIDDeviceUsagePageKey, usagePage);
+    usagePage->release();
   }
 
   // set kIOHIDDeviceUsageKey
-  {
-    OSNumber* usage = OSNumber::withNumber(kHIDUsage_GD_Mouse, 32);
-    if (usage) {
-      setProperty(kIOHIDDeviceUsageKey, usage);
-      usage->release();
-    }
+  if (auto usage = OSNumber::withNumber(kHIDUsage_GD_Mouse, 32)) {
+    setProperty(kIOHIDDeviceUsageKey, usage);
+    usage->release();
   }
 
   // http://lists.apple.com/archives/usb/2005/Mar/msg00122.html
