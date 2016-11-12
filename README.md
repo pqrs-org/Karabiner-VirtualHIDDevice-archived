@@ -32,7 +32,8 @@ The `make` script will create a redistributable kext into `dist` directory.
 
 ## Example
 
-An example is in `example/virtual_pointing_example`.
+* `example/virtual_keyboard_example`
+* `example/virtual_pointing_example`
 
 ### Usage
 
