@@ -1,6 +1,8 @@
 #pragma once
 
+#include "VirtualHIDKeyboard.hpp"
 #include "VirtualHIDManager.hpp"
+#include "VirtualHIDPointing.hpp"
 #include "karabiner_virtualhiddevice.hpp"
 
 class org_pqrs_driver_VirtualHIDManager_UserClient final : public IOUserClient {
@@ -8,10 +10,6 @@ class org_pqrs_driver_VirtualHIDManager_UserClient final : public IOUserClient {
 
 public:
   virtual bool initWithTask(task_t owningTask, void* securityToken, UInt32 type) override;
-
-  virtual bool start(IOService* provider) override;
-  virtual void stop(IOService* provider) override;
-
   virtual IOReturn clientClose(void) override;
 
   virtual IOReturn externalMethod(uint32_t selector, IOExternalMethodArguments* arguments,
@@ -28,6 +26,6 @@ private:
   IOReturn pointingInputReportCallback(const pqrs::karabiner_virtualhiddevice::hid_report::pointing_input& input);
 
   static IOExternalMethodDispatch methods_[static_cast<size_t>(pqrs::karabiner_virtualhiddevice::user_client_method::end_)];
-  task_t owner_;
-  org_pqrs_driver_VirtualHIDManager* provider_;
+  org_pqrs_driver_VirtualHIDKeyboard* virtualHIDKeyboard_;
+  org_pqrs_driver_VirtualHIDPointing* virtualHIDPointing_;
 };

@@ -12,6 +12,51 @@ END_IOKIT_INCLUDE;
 
 OSDefineMetaClassAndStructors(org_pqrs_driver_VirtualHIDManager_UserClient, IOUserClient);
 
+#define CREATE_VIRTUAL_DEVICE(CLASS, POINTER)                                                     \
+  {                                                                                               \
+    if (!POINTER) {                                                                               \
+      do {                                                                                        \
+        /* See IOKit Fundamentals > The Base Classes > Object Creation and Disposal (OSObject) */ \
+        POINTER = new CLASS;                                                                      \
+        if (!POINTER) {                                                                           \
+          return kIOReturnError;                                                                  \
+        }                                                                                         \
+                                                                                                  \
+        if (!POINTER->init(nullptr)) {                                                            \
+          goto error;                                                                             \
+        }                                                                                         \
+                                                                                                  \
+        if (!POINTER->attach(this)) {                                                             \
+          goto error;                                                                             \
+        }                                                                                         \
+                                                                                                  \
+        if (!POINTER->start(this)) {                                                              \
+          POINTER->detach(this);                                                                  \
+          goto error;                                                                             \
+        }                                                                                         \
+                                                                                                  \
+        /* The virtual device is created! */                                                      \
+        break;                                                                                    \
+                                                                                                  \
+      error:                                                                                      \
+        if (POINTER) {                                                                            \
+          POINTER->release();                                                                     \
+          POINTER = nullptr;                                                                      \
+        }                                                                                         \
+        return kIOReturnError;                                                                    \
+      } while (false);                                                                            \
+    }                                                                                             \
+  }
+
+#define TERMINATE_VIRTUAL_DEVICE(POINTER) \
+  {                                       \
+    if (POINTER) {                        \
+      POINTER->terminate();               \
+      POINTER->release();                 \
+      POINTER = nullptr;                  \
+    }                                     \
+  }
+
 IOExternalMethodDispatch org_pqrs_driver_VirtualHIDManager_UserClient::methods_[static_cast<size_t>(pqrs::karabiner_virtualhiddevice::user_client_method::end_)] = {
     {
         // terminate_virtual_hid_keyboard
@@ -60,47 +105,27 @@ bool org_pqrs_driver_VirtualHIDManager_UserClient::initWithTask(task_t owningTas
     return false;
   }
 
-  owner_ = owningTask;
-  provider_ = nullptr;
+  virtualHIDKeyboard_ = nullptr;
+  virtualHIDPointing_ = nullptr;
 
   return true;
-}
-
-bool org_pqrs_driver_VirtualHIDManager_UserClient::start(IOService* provider) {
-  IOLog("org_pqrs_driver_VirtualHIDManager_UserClient::start\n");
-
-  provider_ = OSDynamicCast(org_pqrs_driver_VirtualHIDManager, provider);
-  if (!provider_) {
-    IOLog("%s Error: provider_ == nullptr\n", __PRETTY_FUNCTION__);
-    return false;
-  }
-
-  if (!super::start(provider)) {
-    return false;
-  }
-
-  provider_->attachClient();
-
-  return true;
-}
-
-void org_pqrs_driver_VirtualHIDManager_UserClient::stop(IOService* provider) {
-  IOLog("org_pqrs_driver_VirtualHIDManager_UserClient::stop\n");
-
-  if (provider_) {
-    provider_->detachClient();
-  }
-
-  super::stop(provider);
-  provider_ = nullptr;
 }
 
 IOReturn org_pqrs_driver_VirtualHIDManager_UserClient::clientClose(void) {
   IOLog("org_pqrs_driver_VirtualHIDManager_UserClient::clientClose\n");
 
   // clear input events.
-  pqrs::karabiner_virtualhiddevice::hid_report::pointing_input report;
-  pointingInputReportCallback(report);
+  {
+    pqrs::karabiner_virtualhiddevice::hid_report::keyboard_input report;
+    keyboardInputReportCallback(report);
+  }
+  {
+    pqrs::karabiner_virtualhiddevice::hid_report::pointing_input report;
+    pointingInputReportCallback(report);
+  }
+
+  TERMINATE_VIRTUAL_DEVICE(virtualHIDKeyboard_);
+  TERMINATE_VIRTUAL_DEVICE(virtualHIDPointing_);
 
   if (!terminate()) {
     IOLog("%s Error: terminate failed.\n", __PRETTY_FUNCTION__);
@@ -138,11 +163,7 @@ IOReturn org_pqrs_driver_VirtualHIDManager_UserClient::staticTerminateVirtualHID
 }
 
 IOReturn org_pqrs_driver_VirtualHIDManager_UserClient::terminateVirtualHIDKeyboardCallback(void) {
-  if (!provider_) {
-    return kIOReturnError;
-  }
-
-  provider_->terminateVirtualHIDKeyboard();
+  TERMINATE_VIRTUAL_DEVICE(virtualHIDKeyboard_);
   return kIOReturnSuccess;
 }
 
@@ -160,11 +181,7 @@ IOReturn org_pqrs_driver_VirtualHIDManager_UserClient::staticTerminateVirtualHID
 }
 
 IOReturn org_pqrs_driver_VirtualHIDManager_UserClient::terminateVirtualHIDPointingCallback(void) {
-  if (!provider_) {
-    return kIOReturnError;
-  }
-
-  provider_->terminateVirtualHIDPointing();
+  TERMINATE_VIRTUAL_DEVICE(virtualHIDPointing_);
   return kIOReturnSuccess;
 }
 
@@ -186,12 +203,12 @@ IOReturn org_pqrs_driver_VirtualHIDManager_UserClient::staticKeyboardInputReport
 }
 
 IOReturn org_pqrs_driver_VirtualHIDManager_UserClient::keyboardInputReportCallback(const pqrs::karabiner_virtualhiddevice::hid_report::keyboard_input& input) {
-  if (!provider_) {
-    return kIOReturnError;
-  }
-
   if (auto report = IOBufferMemoryDescriptor::withBytes(&input, sizeof(input), kIODirectionNone)) {
-    auto result = provider_->handleHIDKeyboardReport(report);
+    IOReturn result = kIOReturnError;
+    CREATE_VIRTUAL_DEVICE(org_pqrs_driver_VirtualHIDKeyboard, virtualHIDKeyboard_);
+    if (virtualHIDKeyboard_) {
+      result = virtualHIDKeyboard_->handleReport(report, kIOHIDReportTypeInput, kIOHIDOptionsTypeNone);
+    }
     report->release();
     return result;
   }
@@ -217,12 +234,12 @@ IOReturn org_pqrs_driver_VirtualHIDManager_UserClient::staticPointingInputReport
 }
 
 IOReturn org_pqrs_driver_VirtualHIDManager_UserClient::pointingInputReportCallback(const pqrs::karabiner_virtualhiddevice::hid_report::pointing_input& input) {
-  if (!provider_) {
-    return kIOReturnError;
-  }
-
   if (auto report = IOBufferMemoryDescriptor::withBytes(&input, sizeof(input), kIODirectionNone)) {
-    auto result = provider_->handleHIDPointingReport(report);
+    IOReturn result = kIOReturnError;
+    CREATE_VIRTUAL_DEVICE(org_pqrs_driver_VirtualHIDPointing, virtualHIDPointing_);
+    if (virtualHIDPointing_) {
+      result = virtualHIDPointing_->handleReport(report, kIOHIDReportTypeInput, kIOHIDOptionsTypeNone);
+    }
     report->release();
     return result;
   }
