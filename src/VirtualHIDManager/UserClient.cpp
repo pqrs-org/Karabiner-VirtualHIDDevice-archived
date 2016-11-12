@@ -48,13 +48,13 @@ OSDefineMetaClassAndStructors(org_pqrs_driver_VirtualHIDManager_UserClient, IOUs
     }                                                                                             \
   }
 
-#define TERMINATE_VIRTUAL_DEVICE(POINTER) \
-  {                                       \
-    if (POINTER) {                        \
-      POINTER->terminate();               \
-      POINTER->release();                 \
-      POINTER = nullptr;                  \
-    }                                     \
+#define TERMINATE_VIRTUAL_DEVICE(POINTER)        \
+  {                                              \
+    if (POINTER) {                               \
+      POINTER->terminate(kIOServiceSynchronous); \
+      POINTER->release();                        \
+      POINTER = nullptr;                         \
+    }                                            \
   }
 
 IOExternalMethodDispatch org_pqrs_driver_VirtualHIDManager_UserClient::methods_[static_cast<size_t>(pqrs::karabiner_virtualhiddevice::user_client_method::end_)] = {
