@@ -42,3 +42,8 @@ Execute the following instructions in Terminal.
 2. `cd example/virtual_pointing_example`
 3. `make`
 4. `make run`
+
+## Caution
+
+macOS has an issue that macOS ignores EnableSecureEventInput for input events from VirtualHIDKeyboard.
+Thus, do not use VirtualHIDKeyboard to post normal (alphabet, numbers) keyboard events in order to avoid leaking the passwords.
