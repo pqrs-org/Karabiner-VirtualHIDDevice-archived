@@ -59,6 +59,22 @@ OSDefineMetaClassAndStructors(org_pqrs_driver_VirtualHIDManager_UserClient, IOUs
 
 IOExternalMethodDispatch org_pqrs_driver_VirtualHIDManager_UserClient::methods_[static_cast<size_t>(pqrs::karabiner_virtualhiddevice::user_client_method::end_)] = {
     {
+        // initialize_virtual_hid_keyboard
+        reinterpret_cast<IOExternalMethodAction>(&staticInitializeVirtualHIDKeyboardCallback), // Method pointer.
+        0,                                                                                     // No scalar input value.
+        0,                                                                                     // No struct input value.
+        0,                                                                                     // No scalar output value.
+        0                                                                                      // No struct output value.
+    },
+    {
+        // initialize_virtual_hid_pointing
+        reinterpret_cast<IOExternalMethodAction>(&staticInitializeVirtualHIDPointingCallback), // Method pointer.
+        0,                                                                                     // No scalar input value.
+        0,                                                                                     // No struct input value.
+        0,                                                                                     // No scalar output value.
+        0                                                                                      // No struct output value.
+    },
+    {
         // terminate_virtual_hid_keyboard
         reinterpret_cast<IOExternalMethodAction>(&staticTerminateVirtualHIDKeyboardCallback), // Method pointer.
         0,                                                                                    // No scalar input value.
@@ -75,24 +91,26 @@ IOExternalMethodDispatch org_pqrs_driver_VirtualHIDManager_UserClient::methods_[
         0                                                                                     // No struct output value.
     },
     {
-        // keyboard_input_report
-        reinterpret_cast<IOExternalMethodAction>(&staticKeyboardInputReportCallback), // Method pointer.
-        0,                                                                            // No scalar input value.
-        sizeof(pqrs::karabiner_virtualhiddevice::hid_report::keyboard_input),         // One struct input value.
-        0,                                                                            // No scalar output value.
-        0                                                                             // No struct output value.
+        // post_keyboard_input_report
+        reinterpret_cast<IOExternalMethodAction>(&staticPostKeyboardInputReportCallback), // Method pointer.
+        0,                                                                                // No scalar input value.
+        sizeof(pqrs::karabiner_virtualhiddevice::hid_report::keyboard_input),             // One struct input value.
+        0,                                                                                // No scalar output value.
+        0                                                                                 // No struct output value.
     },
     {
-        // pointing_input_report
-        reinterpret_cast<IOExternalMethodAction>(&staticPointingInputReportCallback), // Method pointer.
-        0,                                                                            // No scalar input value.
-        sizeof(pqrs::karabiner_virtualhiddevice::hid_report::pointing_input),         // One struct input value.
-        0,                                                                            // No scalar output value.
-        0                                                                             // No struct output value.
+        // post_pointing_input_report
+        reinterpret_cast<IOExternalMethodAction>(&staticPostPointingInputReportCallback), // Method pointer.
+        0,                                                                                // No scalar input value.
+        sizeof(pqrs::karabiner_virtualhiddevice::hid_report::pointing_input),             // One struct input value.
+        0,                                                                                // No scalar output value.
+        0                                                                                 // No struct output value.
     },
 };
 
-bool org_pqrs_driver_VirtualHIDManager_UserClient::initWithTask(task_t owningTask, void* securityToken, UInt32 type) {
+bool org_pqrs_driver_VirtualHIDManager_UserClient::initWithTask(task_t owningTask,
+                                                                void* securityToken,
+                                                                UInt32 type) {
   IOLog("org_pqrs_driver_VirtualHIDManager_UserClient::initWithTask\n");
 
   if (clientHasPrivilege(owningTask, kIOClientPrivilegeAdministrator) != KERN_SUCCESS) {
@@ -117,11 +135,11 @@ IOReturn org_pqrs_driver_VirtualHIDManager_UserClient::clientClose(void) {
   // clear input events.
   {
     pqrs::karabiner_virtualhiddevice::hid_report::keyboard_input report;
-    keyboardInputReportCallback(report);
+    postKeyboardInputReportCallback(report);
   }
   {
     pqrs::karabiner_virtualhiddevice::hid_report::pointing_input report;
-    pointingInputReportCallback(report);
+    postPointingInputReportCallback(report);
   }
 
   TERMINATE_VIRTUAL_DEVICE(virtualHIDKeyboard_);
@@ -135,8 +153,11 @@ IOReturn org_pqrs_driver_VirtualHIDManager_UserClient::clientClose(void) {
   return kIOReturnSuccess;
 }
 
-IOReturn org_pqrs_driver_VirtualHIDManager_UserClient::externalMethod(uint32_t selector, IOExternalMethodArguments* arguments,
-                                                                      IOExternalMethodDispatch* dispatch, OSObject* target, void* reference) {
+IOReturn org_pqrs_driver_VirtualHIDManager_UserClient::externalMethod(uint32_t selector,
+                                                                      IOExternalMethodArguments* arguments,
+                                                                      IOExternalMethodDispatch* dispatch,
+                                                                      OSObject* target,
+                                                                      void* reference) {
   if (selector >= static_cast<uint32_t>(pqrs::karabiner_virtualhiddevice::user_client_method::end_)) {
     return kIOReturnUnsupported;
   }
@@ -149,13 +170,46 @@ IOReturn org_pqrs_driver_VirtualHIDManager_UserClient::externalMethod(uint32_t s
   return super::externalMethod(selector, arguments, dispatch, target, reference);
 }
 
-#pragma mark - terminate_virtual_hid_keyboard
+#pragma mark - initialize_virtual_hid_keyboard
 
-IOReturn org_pqrs_driver_VirtualHIDManager_UserClient::staticTerminateVirtualHIDKeyboardCallback(org_pqrs_driver_VirtualHIDManager_UserClient* target, void* reference, IOExternalMethodArguments* arguments) {
+IOReturn org_pqrs_driver_VirtualHIDManager_UserClient::staticInitializeVirtualHIDKeyboardCallback(org_pqrs_driver_VirtualHIDManager_UserClient* target,
+                                                                                                  void* reference,
+                                                                                                  IOExternalMethodArguments* arguments) {
   if (!target) {
     return kIOReturnBadArgument;
   }
-  if (!arguments) {
+
+  return target->initializeVirtualHIDKeyboardCallback();
+}
+
+IOReturn org_pqrs_driver_VirtualHIDManager_UserClient::initializeVirtualHIDKeyboardCallback(void) {
+  CREATE_VIRTUAL_DEVICE(org_pqrs_driver_VirtualHIDKeyboard, virtualHIDKeyboard_);
+  return virtualHIDKeyboard_ ? kIOReturnSuccess : kIOReturnError;
+}
+
+#pragma mark - initialize_virtual_hid_pointing
+
+IOReturn org_pqrs_driver_VirtualHIDManager_UserClient::staticInitializeVirtualHIDPointingCallback(org_pqrs_driver_VirtualHIDManager_UserClient* target,
+                                                                                                  void* reference,
+                                                                                                  IOExternalMethodArguments* arguments) {
+  if (!target) {
+    return kIOReturnBadArgument;
+  }
+
+  return target->initializeVirtualHIDPointingCallback();
+}
+
+IOReturn org_pqrs_driver_VirtualHIDManager_UserClient::initializeVirtualHIDPointingCallback(void) {
+  CREATE_VIRTUAL_DEVICE(org_pqrs_driver_VirtualHIDPointing, virtualHIDPointing_);
+  return virtualHIDPointing_ ? kIOReturnSuccess : kIOReturnError;
+}
+
+#pragma mark - terminate_virtual_hid_keyboard
+
+IOReturn org_pqrs_driver_VirtualHIDManager_UserClient::staticTerminateVirtualHIDKeyboardCallback(org_pqrs_driver_VirtualHIDManager_UserClient* target,
+                                                                                                 void* reference,
+                                                                                                 IOExternalMethodArguments* arguments) {
+  if (!target) {
     return kIOReturnBadArgument;
   }
 
@@ -169,11 +223,10 @@ IOReturn org_pqrs_driver_VirtualHIDManager_UserClient::terminateVirtualHIDKeyboa
 
 #pragma mark - terminate_virtual_hid_pointing
 
-IOReturn org_pqrs_driver_VirtualHIDManager_UserClient::staticTerminateVirtualHIDPointingCallback(org_pqrs_driver_VirtualHIDManager_UserClient* target, void* reference, IOExternalMethodArguments* arguments) {
+IOReturn org_pqrs_driver_VirtualHIDManager_UserClient::staticTerminateVirtualHIDPointingCallback(org_pqrs_driver_VirtualHIDManager_UserClient* target,
+                                                                                                 void* reference,
+                                                                                                 IOExternalMethodArguments* arguments) {
   if (!target) {
-    return kIOReturnBadArgument;
-  }
-  if (!arguments) {
     return kIOReturnBadArgument;
   }
 
@@ -187,7 +240,9 @@ IOReturn org_pqrs_driver_VirtualHIDManager_UserClient::terminateVirtualHIDPointi
 
 #pragma mark - keyboard_input_report
 
-IOReturn org_pqrs_driver_VirtualHIDManager_UserClient::staticKeyboardInputReportCallback(org_pqrs_driver_VirtualHIDManager_UserClient* target, void* reference, IOExternalMethodArguments* arguments) {
+IOReturn org_pqrs_driver_VirtualHIDManager_UserClient::staticPostKeyboardInputReportCallback(org_pqrs_driver_VirtualHIDManager_UserClient* target,
+                                                                                             void* reference,
+                                                                                             IOExternalMethodArguments* arguments) {
   if (!target) {
     return kIOReturnBadArgument;
   }
@@ -196,16 +251,15 @@ IOReturn org_pqrs_driver_VirtualHIDManager_UserClient::staticKeyboardInputReport
   }
 
   if (auto input = static_cast<const pqrs::karabiner_virtualhiddevice::hid_report::keyboard_input*>(arguments->structureInput)) {
-    return target->keyboardInputReportCallback(*input);
+    return target->postKeyboardInputReportCallback(*input);
   }
 
   return kIOReturnBadArgument;
 }
 
-IOReturn org_pqrs_driver_VirtualHIDManager_UserClient::keyboardInputReportCallback(const pqrs::karabiner_virtualhiddevice::hid_report::keyboard_input& input) {
+IOReturn org_pqrs_driver_VirtualHIDManager_UserClient::postKeyboardInputReportCallback(const pqrs::karabiner_virtualhiddevice::hid_report::keyboard_input& input) {
   if (auto report = IOBufferMemoryDescriptor::withBytes(&input, sizeof(input), kIODirectionNone)) {
     IOReturn result = kIOReturnError;
-    CREATE_VIRTUAL_DEVICE(org_pqrs_driver_VirtualHIDKeyboard, virtualHIDKeyboard_);
     if (virtualHIDKeyboard_) {
       result = virtualHIDKeyboard_->handleReport(report, kIOHIDReportTypeInput, kIOHIDOptionsTypeNone);
     }
@@ -218,7 +272,9 @@ IOReturn org_pqrs_driver_VirtualHIDManager_UserClient::keyboardInputReportCallba
 
 #pragma mark - pointing_input_report
 
-IOReturn org_pqrs_driver_VirtualHIDManager_UserClient::staticPointingInputReportCallback(org_pqrs_driver_VirtualHIDManager_UserClient* target, void* reference, IOExternalMethodArguments* arguments) {
+IOReturn org_pqrs_driver_VirtualHIDManager_UserClient::staticPostPointingInputReportCallback(org_pqrs_driver_VirtualHIDManager_UserClient* target,
+                                                                                             void* reference,
+                                                                                             IOExternalMethodArguments* arguments) {
   if (!target) {
     return kIOReturnBadArgument;
   }
@@ -227,16 +283,15 @@ IOReturn org_pqrs_driver_VirtualHIDManager_UserClient::staticPointingInputReport
   }
 
   if (auto input = static_cast<const pqrs::karabiner_virtualhiddevice::hid_report::pointing_input*>(arguments->structureInput)) {
-    return target->pointingInputReportCallback(*input);
+    return target->postPointingInputReportCallback(*input);
   }
 
   return kIOReturnBadArgument;
 }
 
-IOReturn org_pqrs_driver_VirtualHIDManager_UserClient::pointingInputReportCallback(const pqrs::karabiner_virtualhiddevice::hid_report::pointing_input& input) {
+IOReturn org_pqrs_driver_VirtualHIDManager_UserClient::postPointingInputReportCallback(const pqrs::karabiner_virtualhiddevice::hid_report::pointing_input& input) {
   if (auto report = IOBufferMemoryDescriptor::withBytes(&input, sizeof(input), kIODirectionNone)) {
     IOReturn result = kIOReturnError;
-    CREATE_VIRTUAL_DEVICE(org_pqrs_driver_VirtualHIDPointing, virtualHIDPointing_);
     if (virtualHIDPointing_) {
       result = virtualHIDPointing_->handleReport(report, kIOHIDReportTypeInput, kIOHIDOptionsTypeNone);
     }

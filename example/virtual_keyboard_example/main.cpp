@@ -31,6 +31,15 @@ int main(int argc, const char* argv[]) {
     goto finish;
   }
 
+  kr = IOConnectCallStructMethod(connect,
+                                 static_cast<uint32_t>(pqrs::karabiner_virtualhiddevice::user_client_method::initialize_virtual_hid_keyboard),
+                                 nullptr, 0,
+                                 nullptr, 0);
+  if (kr != KERN_SUCCESS) {
+    std::cerr << "initialize_virtual_hid_keyboard error" << std::endl;
+  }
+  std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
   for (int i = 0; i < 10; ++i) {
     pqrs::karabiner_virtualhiddevice::hid_report::keyboard_input report;
     switch (i % 5) {
@@ -52,11 +61,11 @@ int main(int argc, const char* argv[]) {
     }
 
     kr = IOConnectCallStructMethod(connect,
-                                   static_cast<uint32_t>(pqrs::karabiner_virtualhiddevice::user_client_method::keyboard_input_report),
+                                   static_cast<uint32_t>(pqrs::karabiner_virtualhiddevice::user_client_method::post_keyboard_input_report),
                                    &report, sizeof(report),
                                    nullptr, 0);
     if (kr != KERN_SUCCESS) {
-      std::cerr << "IOConnectCallStructMethod error" << std::endl;
+      std::cerr << "post_keyboard_input_report error" << std::endl;
     }
 
     std::this_thread::sleep_for(std::chrono::milliseconds(100));

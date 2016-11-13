@@ -44,10 +44,12 @@ public:
 };
 
 enum class user_client_method {
+  initialize_virtual_hid_keyboard,
+  initialize_virtual_hid_pointing,
   terminate_virtual_hid_keyboard,
   terminate_virtual_hid_pointing,
-  keyboard_input_report,
-  pointing_input_report,
+  post_keyboard_input_report,
+  post_pointing_input_report,
   end_,
 };
 }
