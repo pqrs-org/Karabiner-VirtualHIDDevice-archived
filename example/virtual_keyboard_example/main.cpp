@@ -33,8 +33,22 @@ int main(int argc, const char* argv[]) {
 
   for (int i = 0; i < 10; ++i) {
     pqrs::karabiner_virtualhiddevice::hid_report::keyboard_input report;
-    if (i % 2 == 0) {
+    switch (i % 5) {
+    case 0:
       report.keys[0] = 0x04; // a
+      break;
+    case 1:
+      report.keys[0] = 0x05; // b
+      break;
+    case 2:
+      report.keys[0] = 0x06; // c
+      break;
+    case 3:
+      report.keys[0] = 0x07; // d
+      break;
+    case 4:
+      report.keys[0] = 0x08; // e
+      break;
     }
 
     kr = IOConnectCallStructMethod(connect,
