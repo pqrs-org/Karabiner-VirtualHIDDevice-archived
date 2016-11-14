@@ -59,7 +59,7 @@ OSString* org_pqrs_driver_VirtualHIDKeyboard::newManufacturerString() const {
 }
 
 OSString* org_pqrs_driver_VirtualHIDKeyboard::newProductString() const {
-  return OSString::withCString("pqrs.org VirtualHIDKeyboard");
+  return OSString::withCString("Karabiner VirtualHIDKeyboard");
 }
 
 OSNumber* org_pqrs_driver_VirtualHIDKeyboard::newVendorIDNumber() const {
