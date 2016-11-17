@@ -1,4 +1,4 @@
-CXXFLAGS = -I../../include -std=c++14 -Wall -Werror -O2
+CXXFLAGS = -I../../dist/include -std=c++14 -Wall -Werror -O2
 
 all: main.o
 	c++ -framework IOKit main.o

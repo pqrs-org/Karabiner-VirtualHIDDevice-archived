@@ -1,8 +1,10 @@
 all: gitclean
 	make -C src
+	rm -rf dist
 	mkdir -p dist
-	rm -rf dist/org.pqrs.driver.VirtualHIDManager.kext
+	mkdir -p dist/include
 	cp -R src/build/Release/VirtualHIDManager.kext dist/org.pqrs.driver.VirtualHIDManager.kext
+	cp src/include/karabiner_virtualhiddevice.hpp dist/include
 	bash ./scripts/codesign.sh dist
 	bash ./scripts/setpermissions.sh dist
 

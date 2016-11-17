@@ -1,14 +1,15 @@
 #pragma once
 
 #include "DiagnosticMacros.hpp"
+#include "VersionSignature.hpp"
 
 BEGIN_IOKIT_INCLUDE;
 #include <IOKit/IOLib.h>
 #include <IOKit/IOService.h>
 END_IOKIT_INCLUDE;
 
-class org_pqrs_driver_VirtualHIDManager final : public IOService {
-  OSDeclareDefaultStructors(org_pqrs_driver_VirtualHIDManager);
+class VIRTUAL_HID_MANAGER_CLASS final : public IOService {
+  OSDeclareDefaultStructors(VIRTUAL_HID_MANAGER_CLASS);
 
 public:
   virtual bool start(IOService* provider) override;

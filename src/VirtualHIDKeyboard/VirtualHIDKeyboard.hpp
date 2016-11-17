@@ -1,13 +1,14 @@
 #pragma once
 
 #include "DiagnosticMacros.hpp"
+#include "VersionSignature.hpp"
 
 BEGIN_IOKIT_INCLUDE;
 #include <IOKit/hid/IOHIDDevice.h>
 END_IOKIT_INCLUDE;
 
-class org_pqrs_driver_VirtualHIDKeyboard final : public IOHIDDevice {
-  OSDeclareDefaultStructors(org_pqrs_driver_VirtualHIDKeyboard);
+class VIRTUAL_HID_KEYBOARD_CLASS final : public IOHIDDevice {
+  OSDeclareDefaultStructors(VIRTUAL_HID_KEYBOARD_CLASS);
 
 public:
   virtual bool start(IOService* provider) override;

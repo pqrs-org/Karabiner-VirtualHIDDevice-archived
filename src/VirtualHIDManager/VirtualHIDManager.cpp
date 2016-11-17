@@ -1,9 +1,9 @@
 #include "VirtualHIDManager.hpp"
 
 #define super IOService
-OSDefineMetaClassAndStructors(org_pqrs_driver_VirtualHIDManager, IOService);
+OSDefineMetaClassAndStructors(VIRTUAL_HID_MANAGER_CLASS, IOService);
 
-bool org_pqrs_driver_VirtualHIDManager::start(IOService* provider) {
+bool VIRTUAL_HID_MANAGER_CLASS::start(IOService* provider) {
   IOLog("org_pqrs_driver_VirtualHIDManager::start\n");
 
   if (!super::start(provider)) {
@@ -20,7 +20,7 @@ bool org_pqrs_driver_VirtualHIDManager::start(IOService* provider) {
   return true;
 }
 
-void org_pqrs_driver_VirtualHIDManager::stop(IOService* provider) {
+void VIRTUAL_HID_MANAGER_CLASS::stop(IOService* provider) {
   IOLog("org_pqrs_driver_VirtualHIDManager::stop\n");
 
   super::stop(provider);

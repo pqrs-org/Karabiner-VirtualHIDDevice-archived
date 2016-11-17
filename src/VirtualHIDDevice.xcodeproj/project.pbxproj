@@ -8,11 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		3446DBFE1DDE03CF006E6769 /* VersionSignature.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 3446DBFD1DDE03CF006E6769 /* VersionSignature.hpp */; };
+		3446DC001DDE12BA006E6769 /* karabiner_virtualhiddevice.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 3446DBFF1DDE12BA006E6769 /* karabiner_virtualhiddevice.hpp */; };
 		345437041D41204200CE355E /* VirtualHIDManager.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 345437031D41204200CE355E /* VirtualHIDManager.hpp */; };
 		345437061D41204200CE355E /* VirtualHIDManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 345437051D41204200CE355E /* VirtualHIDManager.cpp */; };
 		3454370C1D4120AC00CE355E /* UserClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3454370A1D4120AC00CE355E /* UserClient.cpp */; };
 		3454370D1D4120AC00CE355E /* UserClient.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 3454370B1D4120AC00CE355E /* UserClient.hpp */; };
-		34D2FC861D9D1CB500168D20 /* karabiner_virtualhiddevice.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 34D2FC851D9D1CB500168D20 /* karabiner_virtualhiddevice.hpp */; };
 		34F58AE21DCF74D50020D6FB /* VirtualHIDKeyboard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34F58AE01DCF74D50020D6FB /* VirtualHIDKeyboard.cpp */; };
 		34F58AE31DCF74D50020D6FB /* VirtualHIDKeyboard.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 34F58AE11DCF74D50020D6FB /* VirtualHIDKeyboard.hpp */; };
 		34F79B911DA117BE008A084E /* VirtualHIDPointing.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 3446AA991D4B0AEC00337B36 /* VirtualHIDPointing.hpp */; };
@@ -24,6 +24,7 @@
 		3446AA991D4B0AEC00337B36 /* VirtualHIDPointing.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = VirtualHIDPointing.hpp; sourceTree = "<group>"; };
 		3446AA9B1D4B0AEC00337B36 /* VirtualHIDPointing.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = VirtualHIDPointing.cpp; sourceTree = "<group>"; };
 		3446DBFD1DDE03CF006E6769 /* VersionSignature.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = VersionSignature.hpp; path = share/VersionSignature.hpp; sourceTree = "<group>"; };
+		3446DBFF1DDE12BA006E6769 /* karabiner_virtualhiddevice.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = karabiner_virtualhiddevice.hpp; path = include/karabiner_virtualhiddevice.hpp; sourceTree = SOURCE_ROOT; };
 		345437011D41204200CE355E /* VirtualHIDManager.kext */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VirtualHIDManager.kext; sourceTree = BUILT_PRODUCTS_DIR; };
 		345437031D41204200CE355E /* VirtualHIDManager.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = VirtualHIDManager.hpp; sourceTree = "<group>"; };
 		345437051D41204200CE355E /* VirtualHIDManager.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = VirtualHIDManager.cpp; sourceTree = "<group>"; };
@@ -31,7 +32,6 @@
 		3454370A1D4120AC00CE355E /* UserClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UserClient.cpp; sourceTree = "<group>"; };
 		3454370B1D4120AC00CE355E /* UserClient.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = UserClient.hpp; sourceTree = "<group>"; };
 		3495C6921D3D8CBE007CB9E7 /* DiagnosticMacros.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = DiagnosticMacros.hpp; path = share/DiagnosticMacros.hpp; sourceTree = "<group>"; };
-		34D2FC851D9D1CB500168D20 /* karabiner_virtualhiddevice.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = karabiner_virtualhiddevice.hpp; path = ../../include/karabiner_virtualhiddevice.hpp; sourceTree = "<group>"; };
 		34F58AE01DCF74D50020D6FB /* VirtualHIDKeyboard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VirtualHIDKeyboard.cpp; path = VirtualHIDKeyboard/VirtualHIDKeyboard.cpp; sourceTree = "<group>"; };
 		34F58AE11DCF74D50020D6FB /* VirtualHIDKeyboard.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = VirtualHIDKeyboard.hpp; path = VirtualHIDKeyboard/VirtualHIDKeyboard.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -50,7 +50,7 @@
 		340E33FB1D470D9B00CF7785 /* include */ = {
 			isa = PBXGroup;
 			children = (
-				34D2FC851D9D1CB500168D20 /* karabiner_virtualhiddevice.hpp */,
+				3446DBFF1DDE12BA006E6769 /* karabiner_virtualhiddevice.hpp */,
 			);
 			name = include;
 			sourceTree = "<group>";
@@ -124,8 +124,8 @@
 				34F79B931DA117CF008A084E /* DiagnosticMacros.hpp in Headers */,
 				3454370D1D4120AC00CE355E /* UserClient.hpp in Headers */,
 				345437041D41204200CE355E /* VirtualHIDManager.hpp in Headers */,
+				3446DC001DDE12BA006E6769 /* karabiner_virtualhiddevice.hpp in Headers */,
 				3446DBFE1DDE03CF006E6769 /* VersionSignature.hpp in Headers */,
-				34D2FC861D9D1CB500168D20 /* karabiner_virtualhiddevice.hpp in Headers */,
 				34F79B911DA117BE008A084E /* VirtualHIDPointing.hpp in Headers */,
 				34F58AE31DCF74D50020D6FB /* VirtualHIDKeyboard.hpp in Headers */,
 			);
@@ -214,9 +214,9 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1.0.0d1;
 				INFOPLIST_FILE = VirtualHIDManager/Info.plist;
-				MODULE_NAME = org.pqrs.driver.VirtualHIDManager;
+				MODULE_NAME = org.pqrs.driver.VirtualHIDManager_v020200;
 				MODULE_VERSION = 1.0.0d1;
-				PRODUCT_BUNDLE_IDENTIFIER = org.pqrs.driver.VirtualHIDManager;
+				PRODUCT_BUNDLE_IDENTIFIER = org.pqrs.driver.VirtualHIDManager_v020200;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = kext;
 			};
