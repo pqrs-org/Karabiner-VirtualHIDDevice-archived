@@ -1,14 +1,17 @@
-#!/bin/sh
+#!/bin/bash
 
 basedir=`dirname $0`
 version=$(cat "$basedir/../version")
 
-find $basedir/.. \( -name 'Info.plist.tmpl' -or -name 'Distribution.xml.tmpl' \) -print0 | while IFS= read -r -d '' f; do
+version_signature=$(echo $version | ruby -ne 'print "v%02d%02d%02d" % $_.strip.split(/\./)')
+
+find $basedir/.. -name '*.tmpl' -print0 | while IFS= read -r -d '' f; do
     if [ -f "$f" ]; then
         outputfile=`dirname "$f"`/`basename "$f" .tmpl`
-        tmpfile=`mktemp /tmp/Info.plist.XXXXXX`
+        tmpfile=`mktemp /tmp/setversion.XXXXXX`
 
-        sed "s|PKGVERSION|$version|g" "$f" > $tmpfile
+        sed "s|PKGVERSION|$version|g" "$f" | \
+            sed "s|VERSIONSIGNATURE|$version_signature|g" > $tmpfile
         if cmp -s "$tmpfile" "$outputfile"; then
             # tmpfile and outputfile are same. remove tmpfile.
             rm -f "$tmpfile"

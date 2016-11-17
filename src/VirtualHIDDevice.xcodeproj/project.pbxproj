@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3446DBFE1DDE03CF006E6769 /* VersionSignature.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 3446DBFD1DDE03CF006E6769 /* VersionSignature.hpp */; };
 		345437041D41204200CE355E /* VirtualHIDManager.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 345437031D41204200CE355E /* VirtualHIDManager.hpp */; };
 		345437061D41204200CE355E /* VirtualHIDManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 345437051D41204200CE355E /* VirtualHIDManager.cpp */; };
 		3454370C1D4120AC00CE355E /* UserClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3454370A1D4120AC00CE355E /* UserClient.cpp */; };
@@ -22,6 +23,7 @@
 /* Begin PBXFileReference section */
 		3446AA991D4B0AEC00337B36 /* VirtualHIDPointing.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = VirtualHIDPointing.hpp; sourceTree = "<group>"; };
 		3446AA9B1D4B0AEC00337B36 /* VirtualHIDPointing.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = VirtualHIDPointing.cpp; sourceTree = "<group>"; };
+		3446DBFD1DDE03CF006E6769 /* VersionSignature.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = VersionSignature.hpp; path = share/VersionSignature.hpp; sourceTree = "<group>"; };
 		345437011D41204200CE355E /* VirtualHIDManager.kext */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VirtualHIDManager.kext; sourceTree = BUILT_PRODUCTS_DIR; };
 		345437031D41204200CE355E /* VirtualHIDManager.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = VirtualHIDManager.hpp; sourceTree = "<group>"; };
 		345437051D41204200CE355E /* VirtualHIDManager.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = VirtualHIDManager.cpp; sourceTree = "<group>"; };
@@ -98,6 +100,7 @@
 			isa = PBXGroup;
 			children = (
 				3495C6921D3D8CBE007CB9E7 /* DiagnosticMacros.hpp */,
+				3446DBFD1DDE03CF006E6769 /* VersionSignature.hpp */,
 			);
 			name = share;
 			sourceTree = "<group>";
@@ -121,6 +124,7 @@
 				34F79B931DA117CF008A084E /* DiagnosticMacros.hpp in Headers */,
 				3454370D1D4120AC00CE355E /* UserClient.hpp in Headers */,
 				345437041D41204200CE355E /* VirtualHIDManager.hpp in Headers */,
+				3446DBFE1DDE03CF006E6769 /* VersionSignature.hpp in Headers */,
 				34D2FC861D9D1CB500168D20 /* karabiner_virtualhiddevice.hpp in Headers */,
 				34F79B911DA117BE008A084E /* VirtualHIDPointing.hpp in Headers */,
 				34F58AE31DCF74D50020D6FB /* VirtualHIDKeyboard.hpp in Headers */,
