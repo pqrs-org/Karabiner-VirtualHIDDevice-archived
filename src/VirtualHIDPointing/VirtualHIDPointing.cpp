@@ -87,8 +87,7 @@ bool VIRTUAL_HID_POINTING_CLASS::start(IOService* provider) {
     usage->release();
   }
 
-  // http://lists.apple.com/archives/usb/2005/Mar/msg00122.html
-  setProperty("HIDDefaultBehavior", "Pointing");
+  setProperty("HIDDefaultBehavior", kOSBooleanTrue);
 
   if (!super::start(provider)) {
     return false;
