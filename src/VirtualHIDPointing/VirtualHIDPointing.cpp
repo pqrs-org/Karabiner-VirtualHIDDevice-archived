@@ -74,7 +74,11 @@ uint8_t reportDescriptor_[] = {
 };
 }
 
-bool VIRTUAL_HID_POINTING_CLASS::start(IOService* provider) {
+bool VIRTUAL_HID_POINTING_CLASS::handleStart(IOService* provider) {
+  if (!super::handleStart(provider)) {
+    return false;
+  }
+
   // set kIOHIDDeviceUsagePageKey
   if (auto usagePage = OSNumber::withNumber(kHIDPage_GenericDesktop, 32)) {
     setProperty(kIOHIDDeviceUsagePageKey, usagePage);
@@ -88,10 +92,6 @@ bool VIRTUAL_HID_POINTING_CLASS::start(IOService* provider) {
   }
 
   setProperty("HIDDefaultBehavior", kOSBooleanTrue);
-
-  if (!super::start(provider)) {
-    return false;
-  }
 
   return true;
 }

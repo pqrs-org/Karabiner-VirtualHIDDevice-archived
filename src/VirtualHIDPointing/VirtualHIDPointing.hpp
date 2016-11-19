@@ -11,7 +11,7 @@ class VIRTUAL_HID_POINTING_CLASS final : public IOHIDDevice {
   OSDeclareDefaultStructors(VIRTUAL_HID_POINTING_CLASS);
 
 public:
-  virtual bool start(IOService* provider) override;
+  virtual bool handleStart(IOService* provider) override;
 
   virtual OSString* newManufacturerString() const override;
   virtual OSString* newProductString() const override;
