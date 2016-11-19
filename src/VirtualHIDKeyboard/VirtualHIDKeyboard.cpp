@@ -36,18 +36,6 @@ bool VIRTUAL_HID_KEYBOARD_CLASS::handleStart(IOService* provider) {
     return false;
   }
 
-  // set kIOHIDDeviceUsagePageKey
-  if (auto usagePage = OSNumber::withNumber(kHIDPage_GenericDesktop, 32)) {
-    setProperty(kIOHIDDeviceUsagePageKey, usagePage);
-    usagePage->release();
-  }
-
-  // set kIOHIDDeviceUsageKey
-  if (auto usage = OSNumber::withNumber(kHIDUsage_GD_Keyboard, 32)) {
-    setProperty(kIOHIDDeviceUsageKey, usage);
-    usage->release();
-  }
-
   setProperty("HIDDefaultBehavior", kOSBooleanTrue);
 
   return true;
