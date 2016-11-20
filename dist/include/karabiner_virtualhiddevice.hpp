@@ -56,7 +56,7 @@ public:
   };
 
   static const char* get_virtual_hid_manager_name(void) {
-    return "org_pqrs_driver_VirtualHIDManager_v020200";
+    return "org_pqrs_driver_VirtualHIDManager_v020213";
   }
 };
 }

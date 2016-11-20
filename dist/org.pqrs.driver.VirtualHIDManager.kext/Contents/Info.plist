@@ -9,7 +9,7 @@
 	<key>CFBundleExecutable</key>
 	<string>VirtualHIDManager</string>
 	<key>CFBundleIdentifier</key>
-	<string>org.pqrs.driver.VirtualHIDManager_v020200</string>
+	<string>org.pqrs.driver.VirtualHIDManager_v020213</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -17,7 +17,7 @@
 	<key>CFBundlePackageType</key>
 	<string>KEXT</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.2.0</string>
+	<string>2.2.13</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleSupportedPlatforms</key>
@@ -25,7 +25,7 @@
 		<string>MacOSX</string>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>2.2.0</string>
+	<string>2.2.13</string>
 	<key>DTCompiler</key>
 	<string>com.apple.compilers.llvm.clang.1_0</string>
 	<key>DTPlatformBuild</key>
@@ -45,19 +45,19 @@
 		<key>VirtualHIDManager</key>
 		<dict>
 			<key>CFBundleIdentifier</key>
-			<string>org.pqrs.driver.VirtualHIDManager_v020200</string>
+			<string>org.pqrs.driver.VirtualHIDManager_v020213</string>
 			<key>IOClass</key>
-			<string>org_pqrs_driver_VirtualHIDManager_v020200</string>
+			<string>org_pqrs_driver_VirtualHIDManager_v020213</string>
 			<key>IOKitDebug</key>
 			<integer>0</integer>
 			<key>IOMatchCategory</key>
-			<string>org_pqrs_driver_VirtualHIDManager_v020200</string>
+			<string>org_pqrs_driver_VirtualHIDManager_v020213</string>
 			<key>IOProviderClass</key>
 			<string>IOResources</string>
 			<key>IOResourceMatch</key>
 			<string>IOKit</string>
 			<key>IOUserClientClass</key>
-			<string>org_pqrs_driver_VirtualHIDManager_UserClient_v020200</string>
+			<string>org_pqrs_driver_VirtualHIDManager_UserClient_v020213</string>
 		</dict>
 	</dict>
 	<key>OSBundleLibraries</key>
