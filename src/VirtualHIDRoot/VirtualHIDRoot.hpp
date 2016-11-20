@@ -14,4 +14,8 @@ class VIRTUAL_HID_ROOT_CLASS final : public IOService {
 public:
   virtual bool start(IOService* provider) override;
   virtual void stop(IOService* provider) override;
+
+private:
+#include "ServiceDetector.hpp"
+  ServiceDetector hidInterfaceDetector_;
 };
