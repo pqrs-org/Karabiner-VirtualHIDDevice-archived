@@ -22,5 +22,5 @@ find $basedir/.. -name '*.tmpl' -print0 | while IFS= read -r -d '' f; do
 done
 
 # append version_signature to MODULE_NAME and PRODUCT_BUNDLE_IDENTIFIER in project.pbxproj
-sed -i '' "s|MODULE_NAME = org\.pqrs\.driver\.VirtualHIDManager.*;|MODULE_NAME = org.pqrs.driver.VirtualHIDManager_${version_signature};|g" ../src/VirtualHIDDevice.xcodeproj/project.pbxproj
-sed -i '' "s|PRODUCT_BUNDLE_IDENTIFIER = org\.pqrs\.driver\.VirtualHIDManager.*;|PRODUCT_BUNDLE_IDENTIFIER = org.pqrs.driver.VirtualHIDManager_${version_signature};|g" ../src/VirtualHIDDevice.xcodeproj/project.pbxproj
+sed -i '' "s|MODULE_NAME = org\.pqrs\.driver\.VirtualHIDDevice.*;|MODULE_NAME = org.pqrs.driver.VirtualHIDDevice_${version_signature};|g" ../src/VirtualHIDDevice.xcodeproj/project.pbxproj
+sed -i '' "s|PRODUCT_BUNDLE_IDENTIFIER = org\.pqrs\.driver\.VirtualHIDDevice.*;|PRODUCT_BUNDLE_IDENTIFIER = org.pqrs.driver.VirtualHIDDevice_${version_signature};|g" ../src/VirtualHIDDevice.xcodeproj/project.pbxproj

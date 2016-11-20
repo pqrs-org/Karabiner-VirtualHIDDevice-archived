@@ -2,12 +2,12 @@
 
 #include "VersionSignature.hpp"
 #include "VirtualHIDKeyboard.hpp"
-#include "VirtualHIDManager.hpp"
 #include "VirtualHIDPointing.hpp"
+#include "VirtualHIDRoot.hpp"
 #include "karabiner_virtualhiddevice.hpp"
 
-class VIRTUAL_HID_MANAGER_USERCLIENT_CLASS final : public IOUserClient {
-  OSDeclareDefaultStructors(VIRTUAL_HID_MANAGER_USERCLIENT_CLASS);
+class VIRTUAL_HID_ROOT_USERCLIENT_CLASS final : public IOUserClient {
+  OSDeclareDefaultStructors(VIRTUAL_HID_ROOT_USERCLIENT_CLASS);
 
 public:
   virtual bool initWithTask(task_t owningTask,
@@ -23,32 +23,32 @@ public:
                                   void* reference = 0) override;
 
 private:
-  static IOReturn staticInitializeVirtualHIDKeyboardCallback(VIRTUAL_HID_MANAGER_USERCLIENT_CLASS* target,
+  static IOReturn staticInitializeVirtualHIDKeyboardCallback(VIRTUAL_HID_ROOT_USERCLIENT_CLASS* target,
                                                              void* reference,
                                                              IOExternalMethodArguments* arguments);
   IOReturn initializeVirtualHIDKeyboardCallback(void);
 
-  static IOReturn staticInitializeVirtualHIDPointingCallback(VIRTUAL_HID_MANAGER_USERCLIENT_CLASS* target,
+  static IOReturn staticInitializeVirtualHIDPointingCallback(VIRTUAL_HID_ROOT_USERCLIENT_CLASS* target,
                                                              void* reference,
                                                              IOExternalMethodArguments* arguments);
   IOReturn initializeVirtualHIDPointingCallback(void);
 
-  static IOReturn staticTerminateVirtualHIDKeyboardCallback(VIRTUAL_HID_MANAGER_USERCLIENT_CLASS* target,
+  static IOReturn staticTerminateVirtualHIDKeyboardCallback(VIRTUAL_HID_ROOT_USERCLIENT_CLASS* target,
                                                             void* reference,
                                                             IOExternalMethodArguments* arguments);
   IOReturn terminateVirtualHIDKeyboardCallback(void);
 
-  static IOReturn staticTerminateVirtualHIDPointingCallback(VIRTUAL_HID_MANAGER_USERCLIENT_CLASS* target,
+  static IOReturn staticTerminateVirtualHIDPointingCallback(VIRTUAL_HID_ROOT_USERCLIENT_CLASS* target,
                                                             void* reference,
                                                             IOExternalMethodArguments* arguments);
   IOReturn terminateVirtualHIDPointingCallback(void);
 
-  static IOReturn staticPostKeyboardInputReportCallback(VIRTUAL_HID_MANAGER_USERCLIENT_CLASS* target,
+  static IOReturn staticPostKeyboardInputReportCallback(VIRTUAL_HID_ROOT_USERCLIENT_CLASS* target,
                                                         void* reference,
                                                         IOExternalMethodArguments* arguments);
   IOReturn postKeyboardInputReportCallback(const pqrs::karabiner_virtualhiddevice::hid_report::keyboard_input& input);
 
-  static IOReturn staticPostPointingInputReportCallback(VIRTUAL_HID_MANAGER_USERCLIENT_CLASS* target,
+  static IOReturn staticPostPointingInputReportCallback(VIRTUAL_HID_ROOT_USERCLIENT_CLASS* target,
                                                         void* reference,
                                                         IOExternalMethodArguments* arguments);
   IOReturn postPointingInputReportCallback(const pqrs::karabiner_virtualhiddevice::hid_report::pointing_input& input);

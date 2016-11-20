@@ -19,7 +19,7 @@ int main(int argc, const char* argv[]) {
 
   kern_return_t kr;
   io_connect_t connect = IO_OBJECT_NULL;
-  auto service = IOServiceGetMatchingService(kIOMasterPortDefault, IOServiceNameMatching(pqrs::karabiner_virtualhiddevice::get_virtual_hid_manager_name()));
+  auto service = IOServiceGetMatchingService(kIOMasterPortDefault, IOServiceNameMatching(pqrs::karabiner_virtualhiddevice::get_virtual_hid_root_name()));
   if (!service) {
     std::cerr << "IOServiceGetMatchingService error" << std::endl;
     goto finish;

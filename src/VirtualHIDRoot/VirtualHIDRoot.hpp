@@ -8,8 +8,8 @@ BEGIN_IOKIT_INCLUDE;
 #include <IOKit/IOService.h>
 END_IOKIT_INCLUDE;
 
-class VIRTUAL_HID_MANAGER_CLASS final : public IOService {
-  OSDeclareDefaultStructors(VIRTUAL_HID_MANAGER_CLASS);
+class VIRTUAL_HID_ROOT_CLASS final : public IOService {
+  OSDeclareDefaultStructors(VIRTUAL_HID_ROOT_CLASS);
 
 public:
   virtual bool start(IOService* provider) override;

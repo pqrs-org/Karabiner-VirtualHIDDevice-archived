@@ -7,9 +7,9 @@ targetdir=/tmp/org.pqrs.driver.VirtualHIDDevice
 
 sudo rm -rf $targetdir
 mkdir $targetdir
-cp -R "build/Release/VirtualHIDManager.kext" $targetdir
+cp -R "build/Release/VirtualHIDDevice.kext" $targetdir
 
 bash ../scripts/codesign.sh $targetdir
 sudo chown -R root:wheel $targetdir
 
-sudo kextload "$targetdir/VirtualHIDManager.kext"
+sudo kextload "$targetdir/VirtualHIDDevice.kext"

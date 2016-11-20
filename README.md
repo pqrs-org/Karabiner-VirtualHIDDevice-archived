@@ -39,7 +39,7 @@ The `make` script will create a redistributable kext into `dist` directory.
 
 Execute the following instructions in Terminal.
 
-1. Install VirtualHIDManager.kext by `make install` in the top directory.
+1. Install VirtualHIDDevice.kext by `make install` in the top directory.
 2. `cd example/virtual_pointing_example`
 3. `make`
 4. `make run`
