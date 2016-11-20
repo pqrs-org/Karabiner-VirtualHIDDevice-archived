@@ -40,9 +40,9 @@ int main(int argc, const char* argv[]) {
   }
   std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
-  for (int i = 0; i < 10; ++i) {
+  for (int i = 0; i < 12; ++i) {
     pqrs::karabiner_virtualhiddevice::hid_report::keyboard_input report;
-    switch (i % 5) {
+    switch (i % 6) {
     case 0:
       report.keys[0] = 0x04; // a
       break;
@@ -57,6 +57,9 @@ int main(int argc, const char* argv[]) {
       break;
     case 4:
       report.keys[0] = 0x08; // e
+      break;
+    case 5:
+      // Send empty report
       break;
     }
 
