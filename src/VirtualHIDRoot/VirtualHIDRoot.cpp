@@ -1,7 +1,7 @@
 #include "VirtualHIDRoot.hpp"
 
 #define super IOService
-OSDefineMetaClassAndStructors(VIRTUAL_HID_ROOT_CLASS, IOService);
+OSDefineMetaClassAndStructors(VIRTUAL_HID_ROOT_CLASS, super);
 
 bool VIRTUAL_HID_ROOT_CLASS::start(IOService* provider) {
   IOLog("org_pqrs_driver_VirtualHIDRoot::start\n");

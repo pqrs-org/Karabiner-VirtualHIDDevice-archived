@@ -1,7 +1,7 @@
 #include "VirtualHIDPointing.hpp"
 
 #define super IOHIDDevice
-OSDefineMetaClassAndStructors(VIRTUAL_HID_POINTING_CLASS, IOHIDDevice);
+OSDefineMetaClassAndStructors(VIRTUAL_HID_POINTING_CLASS, super);
 
 namespace {
 uint8_t reportDescriptor_[] = {

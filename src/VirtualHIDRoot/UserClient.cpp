@@ -10,7 +10,7 @@ END_IOKIT_INCLUDE;
 
 #define super IOUserClient
 
-OSDefineMetaClassAndStructors(VIRTUAL_HID_ROOT_USERCLIENT_CLASS, IOUserClient);
+OSDefineMetaClassAndStructors(VIRTUAL_HID_ROOT_USERCLIENT_CLASS, super);
 
 #define CREATE_VIRTUAL_DEVICE(CLASS, POINTER)                                                     \
   {                                                                                               \

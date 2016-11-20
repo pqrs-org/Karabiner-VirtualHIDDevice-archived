@@ -1,7 +1,7 @@
 #include "VirtualHIDKeyboard.hpp"
 
 #define super IOHIDDevice
-OSDefineMetaClassAndStructors(VIRTUAL_HID_KEYBOARD_CLASS, IOHIDDevice);
+OSDefineMetaClassAndStructors(VIRTUAL_HID_KEYBOARD_CLASS, super);
 
 namespace {
 uint8_t reportDescriptor_[] = {
