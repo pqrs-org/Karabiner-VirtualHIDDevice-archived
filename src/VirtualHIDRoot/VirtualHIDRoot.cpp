@@ -4,7 +4,7 @@
 OSDefineMetaClassAndStructors(VIRTUAL_HID_ROOT_CLASS, super);
 
 bool VIRTUAL_HID_ROOT_CLASS::start(IOService* provider) {
-  IOLog("org_pqrs_driver_VirtualHIDRoot::start\n");
+  IOLog(VIRTUAL_HID_ROOT_CLASS_STRING "::start\n");
 
   if (!super::start(provider)) {
     return false;
@@ -21,7 +21,7 @@ bool VIRTUAL_HID_ROOT_CLASS::start(IOService* provider) {
 }
 
 void VIRTUAL_HID_ROOT_CLASS::stop(IOService* provider) {
-  IOLog("org_pqrs_driver_VirtualHIDRoot::stop\n");
+  IOLog(VIRTUAL_HID_ROOT_CLASS_STRING "::stop\n");
 
   super::stop(provider);
 }

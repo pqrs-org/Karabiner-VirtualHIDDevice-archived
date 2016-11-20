@@ -111,7 +111,7 @@ IOExternalMethodDispatch VIRTUAL_HID_ROOT_USERCLIENT_CLASS::methods_[static_cast
 bool VIRTUAL_HID_ROOT_USERCLIENT_CLASS::initWithTask(task_t owningTask,
                                                         void* securityToken,
                                                         UInt32 type) {
-  IOLog("org_pqrs_driver_VirtualHIDDevice_UserClient::initWithTask\n");
+  IOLog(VIRTUAL_HID_ROOT_USERCLIENT_CLASS_STRING "::initWithTask\n");
 
   if (clientHasPrivilege(owningTask, kIOClientPrivilegeAdministrator) != KERN_SUCCESS) {
     IOLog("%s Error: clientHasPrivilege failed.\n", __PRETTY_FUNCTION__);
@@ -130,7 +130,7 @@ bool VIRTUAL_HID_ROOT_USERCLIENT_CLASS::initWithTask(task_t owningTask,
 }
 
 IOReturn VIRTUAL_HID_ROOT_USERCLIENT_CLASS::clientClose(void) {
-  IOLog("org_pqrs_driver_VirtualHIDDevice_UserClient::clientClose\n");
+  IOLog(VIRTUAL_HID_ROOT_USERCLIENT_CLASS_STRING "::clientClose\n");
 
   // clear input events.
   {
