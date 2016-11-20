@@ -68,7 +68,6 @@
 			isa = PBXGroup;
 			children = (
 				340E33FB1D470D9B00CF7785 /* include */,
-				345437071D41204200CE355E /* Info.plist */,
 				3454370A1D4120AC00CE355E /* UserClient.cpp */,
 				3454370B1D4120AC00CE355E /* UserClient.hpp */,
 				345437051D41204200CE355E /* VirtualHIDManager.cpp */,
@@ -80,6 +79,7 @@
 		34D210CC1D1637AA005AF893 = {
 			isa = PBXGroup;
 			children = (
+				345437071D41204200CE355E /* Info.plist */,
 				34D210D71D1637AB005AF893 /* Products */,
 				34E4502D1D2F41C300C5AC13 /* share */,
 				34F58ADF1DCF74C40020D6FB /* VirtualHIDKeyboard */,
@@ -213,10 +213,10 @@
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1.0.0d1;
-				INFOPLIST_FILE = VirtualHIDManager/Info.plist;
-				MODULE_NAME = org.pqrs.driver.VirtualHIDManager_v020200;
+				INFOPLIST_FILE = "$(SRCROOT)/Info.plist";
+				MODULE_NAME = org.pqrs.driver.VirtualHIDManager_v020212;
 				MODULE_VERSION = 1.0.0d1;
-				PRODUCT_BUNDLE_IDENTIFIER = org.pqrs.driver.VirtualHIDManager_v020200;
+				PRODUCT_BUNDLE_IDENTIFIER = org.pqrs.driver.VirtualHIDManager_v020212;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = kext;
 			};
