@@ -4,6 +4,7 @@ BEGIN_IOKIT_INCLUDE;
 #include <IOKit/IOBufferMemoryDescriptor.h>
 #include <IOKit/IOLib.h>
 #include <IOKit/IOUserClient.h>
+#include <IOKit/hidsystem/IOHIDSystem.h>
 END_IOKIT_INCLUDE;
 
 #include "UserClient.hpp"
@@ -67,24 +68,8 @@ IOExternalMethodDispatch VIRTUAL_HID_ROOT_USERCLIENT_CLASS::methods_[static_cast
         0                                                                                      // No struct output value.
     },
     {
-        // initialize_virtual_hid_pointing
-        reinterpret_cast<IOExternalMethodAction>(&staticInitializeVirtualHIDPointingCallback), // Method pointer.
-        0,                                                                                     // No scalar input value.
-        0,                                                                                     // No struct input value.
-        0,                                                                                     // No scalar output value.
-        0                                                                                      // No struct output value.
-    },
-    {
         // terminate_virtual_hid_keyboard
         reinterpret_cast<IOExternalMethodAction>(&staticTerminateVirtualHIDKeyboardCallback), // Method pointer.
-        0,                                                                                    // No scalar input value.
-        0,                                                                                    // No struct input value.
-        0,                                                                                    // No scalar output value.
-        0                                                                                     // No struct output value.
-    },
-    {
-        // terminate_virtual_hid_pointing
-        reinterpret_cast<IOExternalMethodAction>(&staticTerminateVirtualHIDPointingCallback), // Method pointer.
         0,                                                                                    // No scalar input value.
         0,                                                                                    // No struct input value.
         0,                                                                                    // No scalar output value.
@@ -99,12 +84,36 @@ IOExternalMethodDispatch VIRTUAL_HID_ROOT_USERCLIENT_CLASS::methods_[static_cast
         0                                                                                 // No struct output value.
     },
     {
+        // initialize_virtual_hid_pointing
+        reinterpret_cast<IOExternalMethodAction>(&staticInitializeVirtualHIDPointingCallback), // Method pointer.
+        0,                                                                                     // No scalar input value.
+        0,                                                                                     // No struct input value.
+        0,                                                                                     // No scalar output value.
+        0                                                                                      // No struct output value.
+    },
+    {
+        // terminate_virtual_hid_pointing
+        reinterpret_cast<IOExternalMethodAction>(&staticTerminateVirtualHIDPointingCallback), // Method pointer.
+        0,                                                                                    // No scalar input value.
+        0,                                                                                    // No struct input value.
+        0,                                                                                    // No scalar output value.
+        0                                                                                     // No struct output value.
+    },
+    {
         // post_pointing_input_report
         reinterpret_cast<IOExternalMethodAction>(&staticPostPointingInputReportCallback), // Method pointer.
         0,                                                                                // No scalar input value.
         sizeof(pqrs::karabiner_virtualhiddevice::hid_report::pointing_input),             // One struct input value.
         0,                                                                                // No scalar output value.
         0                                                                                 // No struct output value.
+    },
+    {
+        // post_keyboard_event
+        reinterpret_cast<IOExternalMethodAction>(&staticPostKeyboardEventCallback), // Method pointer.
+        0,                                                                          // No scalar input value.
+        sizeof(pqrs::karabiner_virtualhiddevice::keyboard_event),                   // One struct input value.
+        0,                                                                          // No scalar output value.
+        0                                                                           // No struct output value.
     },
 };
 
@@ -297,6 +306,47 @@ IOReturn VIRTUAL_HID_ROOT_USERCLIENT_CLASS::postPointingInputReportCallback(cons
     }
     report->release();
     return result;
+  }
+
+  return kIOReturnError;
+}
+
+#pragma mark - post_keyboard_event
+
+IOReturn VIRTUAL_HID_ROOT_USERCLIENT_CLASS::staticPostKeyboardEventCallback(VIRTUAL_HID_ROOT_USERCLIENT_CLASS* target,
+                                                                            void* reference,
+                                                                            IOExternalMethodArguments* arguments) {
+  if (!target) {
+    return kIOReturnBadArgument;
+  }
+  if (!arguments) {
+    return kIOReturnBadArgument;
+  }
+
+  if (auto keyboard_event = static_cast<const pqrs::karabiner_virtualhiddevice::keyboard_event*>(arguments->structureInput)) {
+    return target->postKeyboardEventCallback(*keyboard_event);
+  }
+
+  return kIOReturnBadArgument;
+}
+
+IOReturn VIRTUAL_HID_ROOT_USERCLIENT_CLASS::postKeyboardEventCallback(const pqrs::karabiner_virtualhiddevice::keyboard_event& keyboard_event) {
+  if (auto hidSystem = IOHIDSystem::instance()) {
+    AbsoluteTime ts;
+    clock_get_uptime(&ts);
+
+    hidSystem->keyboardEvent(static_cast<uint32_t>(keyboard_event.event_type),
+                             keyboard_event.flags,
+                             keyboard_event.key,
+                             keyboard_event.char_code,
+                             keyboard_event.char_set,
+                             keyboard_event.orig_char_code,
+                             keyboard_event.orig_char_set,
+                             keyboard_event.keyboard_type,
+                             keyboard_event.repeat,
+                             ts);
+
+    return kIOReturnSuccess;
   }
 
   return kIOReturnError;
