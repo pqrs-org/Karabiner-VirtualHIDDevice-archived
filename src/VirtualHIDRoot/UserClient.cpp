@@ -109,8 +109,8 @@ IOExternalMethodDispatch VIRTUAL_HID_ROOT_USERCLIENT_CLASS::methods_[static_cast
 };
 
 bool VIRTUAL_HID_ROOT_USERCLIENT_CLASS::initWithTask(task_t owningTask,
-                                                        void* securityToken,
-                                                        UInt32 type) {
+                                                     void* securityToken,
+                                                     UInt32 type) {
   IOLog(VIRTUAL_HID_ROOT_USERCLIENT_CLASS_STRING "::initWithTask\n");
 
   if (clientHasPrivilege(owningTask, kIOClientPrivilegeAdministrator) != KERN_SUCCESS) {
@@ -154,10 +154,10 @@ IOReturn VIRTUAL_HID_ROOT_USERCLIENT_CLASS::clientClose(void) {
 }
 
 IOReturn VIRTUAL_HID_ROOT_USERCLIENT_CLASS::externalMethod(uint32_t selector,
-                                                              IOExternalMethodArguments* arguments,
-                                                              IOExternalMethodDispatch* dispatch,
-                                                              OSObject* target,
-                                                              void* reference) {
+                                                           IOExternalMethodArguments* arguments,
+                                                           IOExternalMethodDispatch* dispatch,
+                                                           OSObject* target,
+                                                           void* reference) {
   if (selector >= static_cast<uint32_t>(pqrs::karabiner_virtualhiddevice::user_client_method::end_)) {
     return kIOReturnUnsupported;
   }
@@ -173,8 +173,8 @@ IOReturn VIRTUAL_HID_ROOT_USERCLIENT_CLASS::externalMethod(uint32_t selector,
 #pragma mark - initialize_virtual_hid_keyboard
 
 IOReturn VIRTUAL_HID_ROOT_USERCLIENT_CLASS::staticInitializeVirtualHIDKeyboardCallback(VIRTUAL_HID_ROOT_USERCLIENT_CLASS* target,
-                                                                                          void* reference,
-                                                                                          IOExternalMethodArguments* arguments) {
+                                                                                       void* reference,
+                                                                                       IOExternalMethodArguments* arguments) {
   if (!target) {
     return kIOReturnBadArgument;
   }
@@ -190,8 +190,8 @@ IOReturn VIRTUAL_HID_ROOT_USERCLIENT_CLASS::initializeVirtualHIDKeyboardCallback
 #pragma mark - initialize_virtual_hid_pointing
 
 IOReturn VIRTUAL_HID_ROOT_USERCLIENT_CLASS::staticInitializeVirtualHIDPointingCallback(VIRTUAL_HID_ROOT_USERCLIENT_CLASS* target,
-                                                                                          void* reference,
-                                                                                          IOExternalMethodArguments* arguments) {
+                                                                                       void* reference,
+                                                                                       IOExternalMethodArguments* arguments) {
   if (!target) {
     return kIOReturnBadArgument;
   }
@@ -207,8 +207,8 @@ IOReturn VIRTUAL_HID_ROOT_USERCLIENT_CLASS::initializeVirtualHIDPointingCallback
 #pragma mark - terminate_virtual_hid_keyboard
 
 IOReturn VIRTUAL_HID_ROOT_USERCLIENT_CLASS::staticTerminateVirtualHIDKeyboardCallback(VIRTUAL_HID_ROOT_USERCLIENT_CLASS* target,
-                                                                                         void* reference,
-                                                                                         IOExternalMethodArguments* arguments) {
+                                                                                      void* reference,
+                                                                                      IOExternalMethodArguments* arguments) {
   if (!target) {
     return kIOReturnBadArgument;
   }
@@ -224,8 +224,8 @@ IOReturn VIRTUAL_HID_ROOT_USERCLIENT_CLASS::terminateVirtualHIDKeyboardCallback(
 #pragma mark - terminate_virtual_hid_pointing
 
 IOReturn VIRTUAL_HID_ROOT_USERCLIENT_CLASS::staticTerminateVirtualHIDPointingCallback(VIRTUAL_HID_ROOT_USERCLIENT_CLASS* target,
-                                                                                         void* reference,
-                                                                                         IOExternalMethodArguments* arguments) {
+                                                                                      void* reference,
+                                                                                      IOExternalMethodArguments* arguments) {
   if (!target) {
     return kIOReturnBadArgument;
   }
@@ -241,8 +241,8 @@ IOReturn VIRTUAL_HID_ROOT_USERCLIENT_CLASS::terminateVirtualHIDPointingCallback(
 #pragma mark - keyboard_input_report
 
 IOReturn VIRTUAL_HID_ROOT_USERCLIENT_CLASS::staticPostKeyboardInputReportCallback(VIRTUAL_HID_ROOT_USERCLIENT_CLASS* target,
-                                                                                     void* reference,
-                                                                                     IOExternalMethodArguments* arguments) {
+                                                                                  void* reference,
+                                                                                  IOExternalMethodArguments* arguments) {
   if (!target) {
     return kIOReturnBadArgument;
   }
@@ -273,8 +273,8 @@ IOReturn VIRTUAL_HID_ROOT_USERCLIENT_CLASS::postKeyboardInputReportCallback(cons
 #pragma mark - pointing_input_report
 
 IOReturn VIRTUAL_HID_ROOT_USERCLIENT_CLASS::staticPostPointingInputReportCallback(VIRTUAL_HID_ROOT_USERCLIENT_CLASS* target,
-                                                                                     void* reference,
-                                                                                     IOExternalMethodArguments* arguments) {
+                                                                                  void* reference,
+                                                                                  IOExternalMethodArguments* arguments) {
   if (!target) {
     return kIOReturnBadArgument;
   }
