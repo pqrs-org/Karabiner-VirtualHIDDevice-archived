@@ -45,18 +45,54 @@ public:
     };
   };
 
+  enum class event_type {
+    key_down = 10,
+    key_up = 11,
+    flags_changed = 12,
+  };
+
+  class keyboard_event {
+  public:
+    keyboard_event(void) : event_type(event_type::key_down),
+                           flags(0),
+                           key(0),
+                           char_code(0),
+                           char_set(0),
+                           orig_char_code(0),
+                           orig_char_set(0),
+                           keyboard_type(0),
+                           repeat(false) {}
+
+    event_type event_type;
+    uint32_t flags;
+    uint32_t key;
+    uint32_t char_code;
+    uint32_t char_set;
+    uint32_t orig_char_code;
+    uint32_t orig_char_set;
+    uint32_t keyboard_type;
+    bool repeat;
+  };
+
   enum class user_client_method {
+    // VirtualHIDKeyboard
     initialize_virtual_hid_keyboard,
-    initialize_virtual_hid_pointing,
     terminate_virtual_hid_keyboard,
-    terminate_virtual_hid_pointing,
     post_keyboard_input_report,
+
+    // VirtualHIDPointing
+    initialize_virtual_hid_pointing,
+    terminate_virtual_hid_pointing,
     post_pointing_input_report,
+
+    // IOHIDSystem
+    post_keyboard_event,
+
     end_,
   };
 
   static const char* get_virtual_hid_root_name(void) {
-    return "org_pqrs_driver_VirtualHIDRoot_v020215";
+    return "org_pqrs_driver_VirtualHIDRoot_v020221";
   }
 };
 }
