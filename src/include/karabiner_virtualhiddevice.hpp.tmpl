@@ -51,7 +51,7 @@ public:
     flags_changed = 12,
   };
 
-  class keyboard_event {
+  class __attribute__((packed)) keyboard_event {
   public:
     keyboard_event(void) : event_type(event_type::key_down),
                            flags(0),
