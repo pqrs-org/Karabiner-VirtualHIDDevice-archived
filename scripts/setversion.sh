@@ -1,11 +1,13 @@
 #!/bin/bash
 
 basedir=`dirname $0`
-version=$(cat "$basedir/../version")
+cd "$basedir"
+
+version=$(cat "../version")
 
 version_signature=$(echo $version | ruby -ne 'print "v%02d%02d%02d" % $_.strip.split(/\./)')
 
-find $basedir/.. -name '*.tmpl' -print0 | while IFS= read -r -d '' f; do
+find .. -name '*.tmpl' -print0 | while IFS= read -r -d '' f; do
     if [ -f "$f" ]; then
         outputfile=`dirname "$f"`/`basename "$f" .tmpl`
         tmpfile=`mktemp /tmp/setversion.XXXXXX`
