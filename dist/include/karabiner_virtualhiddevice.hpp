@@ -20,6 +20,16 @@ public:
       uint8_t modifiers;
       uint8_t reserved;
       uint8_t keys[6];
+
+      // modifiers:
+      //   0x1 << 0 : left control
+      //   0x1 << 1 : left shift
+      //   0x1 << 2 : left option
+      //   0x1 << 3 : left command
+      //   0x1 << 4 : right control
+      //   0x1 << 5 : right shift
+      //   0x1 << 6 : right option
+      //   0x1 << 7 : right command
     };
 
     class __attribute__((packed)) pointing_input final {
@@ -45,13 +55,13 @@ public:
     };
   };
 
-  enum class event_type {
+  enum class event_type : uint32_t {
     key_down = 10,
     key_up = 11,
     flags_changed = 12,
   };
 
-  class keyboard_event {
+  class __attribute__((packed)) keyboard_event {
   public:
     keyboard_event(void) : event_type(event_type::key_down),
                            flags(0),
@@ -74,6 +84,23 @@ public:
     bool repeat;
   };
 
+  class __attribute__((packed)) keyboard_special_event {
+  public:
+    keyboard_special_event(void) : event_type(event_type::key_down),
+                                   flags(0),
+                                   key(0),
+                                   flavor(0),
+                                   guid(0),
+                                   repeat(false) {}
+
+    event_type event_type;
+    uint32_t flags;
+    uint32_t key;
+    uint32_t flavor;
+    uint64_t guid;
+    bool repeat;
+  };
+
   enum class user_client_method {
     // VirtualHIDKeyboard
     initialize_virtual_hid_keyboard,
@@ -85,14 +112,16 @@ public:
     terminate_virtual_hid_pointing,
     post_pointing_input_report,
 
-    // IOHIDSystem
+    // IOHIDSystem (since macOS 10.12)
     post_keyboard_event,
+    post_keyboard_special_event,
+    update_event_flags,
 
     end_,
   };
 
   static const char* get_virtual_hid_root_name(void) {
-    return "org_pqrs_driver_VirtualHIDRoot_v020221";
+    return "org_pqrs_driver_VirtualHIDRoot_v020300";
   }
 };
 }
