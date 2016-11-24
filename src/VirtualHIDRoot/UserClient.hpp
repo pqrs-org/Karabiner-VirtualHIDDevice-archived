@@ -5,6 +5,7 @@
 #include "VirtualHIDPointing.hpp"
 #include "VirtualHIDRoot.hpp"
 #include "karabiner_virtualhiddevice.hpp"
+#include <sys/sysctl.h>
 
 class VIRTUAL_HID_ROOT_USERCLIENT_CLASS final : public IOUserClient {
   OSDeclareDefaultStructors(VIRTUAL_HID_ROOT_USERCLIENT_CLASS);
@@ -23,6 +24,8 @@ public:
                                   void* reference = 0) override;
 
 private:
+#include "KernelVersion.hpp"
+
   // ----------------------------------------
   // VirtualHIDKeyboard
   static IOReturn staticInitializeVirtualHIDKeyboardCallback(VIRTUAL_HID_ROOT_USERCLIENT_CLASS* target,
@@ -65,6 +68,7 @@ private:
   IOReturn postKeyboardEventCallback(const pqrs::karabiner_virtualhiddevice::keyboard_event& keyboard_event);
 
   static IOExternalMethodDispatch methods_[static_cast<size_t>(pqrs::karabiner_virtualhiddevice::user_client_method::end_)];
+  int kernelMajorReleaseVersion_;
   VIRTUAL_HID_KEYBOARD_CLASS* virtualHIDKeyboard_;
   VIRTUAL_HID_POINTING_CLASS* virtualHIDPointing_;
 };

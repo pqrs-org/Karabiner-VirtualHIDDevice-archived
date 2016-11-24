@@ -132,6 +132,7 @@ bool VIRTUAL_HID_ROOT_USERCLIENT_CLASS::initWithTask(task_t owningTask,
     return false;
   }
 
+  kernelMajorReleaseVersion_ = KernelVersion::getMajorReleaseVersion();
   virtualHIDKeyboard_ = nullptr;
   virtualHIDPointing_ = nullptr;
 
@@ -331,6 +332,13 @@ IOReturn VIRTUAL_HID_ROOT_USERCLIENT_CLASS::staticPostKeyboardEventCallback(VIRT
 }
 
 IOReturn VIRTUAL_HID_ROOT_USERCLIENT_CLASS::postKeyboardEventCallback(const pqrs::karabiner_virtualhiddevice::keyboard_event& keyboard_event) {
+  if (kernelMajorReleaseVersion_ < 16) {
+    IOLog(VIRTUAL_HID_ROOT_USERCLIENT_CLASS_STRING "::postKeyboardEventCallback requires macOS 10.12 or later.\n");
+    // IOHIDSystem::keyboardEvent is available since macOS Sierra.
+    // (This method exists in previous macOS releases, but it causes kernel panic.)
+    return kIOReturnUnsupported;
+  }
+
   if (auto hidSystem = IOHIDSystem::instance()) {
     AbsoluteTime ts;
     clock_get_uptime(&ts);
