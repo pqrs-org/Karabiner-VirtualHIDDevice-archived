@@ -52,12 +52,14 @@ int main(int argc, const char* argv[]) {
       keyboard_event.key = 1; // s
       break;
     case 4:
-      keyboard_event.event_type = pqrs::karabiner_virtualhiddevice::event_type::key_down;
-      keyboard_event.key = 2; // d
+      keyboard_event.event_type = pqrs::karabiner_virtualhiddevice::event_type::flags_changed;
+      keyboard_event.key = 0x3b; // left control
+      keyboard_event.flags = 0x40001;
       break;
     case 5:
-      keyboard_event.event_type = pqrs::karabiner_virtualhiddevice::event_type::key_up;
-      keyboard_event.key = 2; // d
+      keyboard_event.event_type = pqrs::karabiner_virtualhiddevice::event_type::flags_changed;
+      keyboard_event.key = 0x3b; // left control
+      keyboard_event.flags = 0;
       break;
     }
 

@@ -115,6 +115,22 @@ IOExternalMethodDispatch VIRTUAL_HID_ROOT_USERCLIENT_CLASS::methods_[static_cast
         0,                                                                          // No scalar output value.
         0                                                                           // No struct output value.
     },
+    {
+        // post_keyboard_special_event
+        reinterpret_cast<IOExternalMethodAction>(&staticPostKeyboardSpecialEventCallback), // Method pointer.
+        0,                                                                                 // No scalar input value.
+        sizeof(pqrs::karabiner_virtualhiddevice::keyboard_special_event),                  // One struct input value.
+        0,                                                                                 // No scalar output value.
+        0                                                                                  // No struct output value.
+    },
+    {
+        // update_event_flags
+        reinterpret_cast<IOExternalMethodAction>(&staticUpdateEventFlagsCallback), // Method pointer.
+        0,                                                                         // No scalar input value.
+        sizeof(uint32_t),                                                          // One struct input value.
+        0,                                                                         // No scalar output value.
+        0                                                                          // No struct output value.
+    },
 };
 
 bool VIRTUAL_HID_ROOT_USERCLIENT_CLASS::initWithTask(task_t owningTask,
@@ -354,6 +370,89 @@ IOReturn VIRTUAL_HID_ROOT_USERCLIENT_CLASS::postKeyboardEventCallback(const pqrs
                              keyboard_event.repeat,
                              ts);
 
+    return kIOReturnSuccess;
+  }
+
+  return kIOReturnError;
+}
+
+#pragma mark - post_keyboard_special_event
+
+IOReturn VIRTUAL_HID_ROOT_USERCLIENT_CLASS::staticPostKeyboardSpecialEventCallback(VIRTUAL_HID_ROOT_USERCLIENT_CLASS* target,
+                                                                                   void* reference,
+                                                                                   IOExternalMethodArguments* arguments) {
+  if (!target) {
+    return kIOReturnBadArgument;
+  }
+  if (!arguments) {
+    return kIOReturnBadArgument;
+  }
+
+  if (auto keyboard_special_event = static_cast<const pqrs::karabiner_virtualhiddevice::keyboard_special_event*>(arguments->structureInput)) {
+    return target->postKeyboardSpecialEventCallback(*keyboard_special_event);
+  }
+
+  return kIOReturnBadArgument;
+}
+
+IOReturn VIRTUAL_HID_ROOT_USERCLIENT_CLASS::postKeyboardSpecialEventCallback(const pqrs::karabiner_virtualhiddevice::keyboard_special_event& keyboard_special_event) {
+  if (kernelMajorReleaseVersion_ < 16) {
+    IOLog(VIRTUAL_HID_ROOT_USERCLIENT_CLASS_STRING "::postKeyboardSpecialEventCallback requires macOS 10.12 or later.\n");
+    // IOHIDSystem::keyboardSpecialEvent is available since macOS Sierra.
+    // (This method exists in previous macOS releases, but it causes kernel panic.)
+    return kIOReturnUnsupported;
+  }
+
+  if (auto hidSystem = IOHIDSystem::instance()) {
+    AbsoluteTime ts;
+    clock_get_uptime(&ts);
+
+    hidSystem->keyboardSpecialEvent(static_cast<uint32_t>(keyboard_special_event.event_type),
+                                    keyboard_special_event.flags,
+                                    keyboard_special_event.key,
+                                    keyboard_special_event.flavor,
+                                    keyboard_special_event.guid,
+                                    keyboard_special_event.repeat,
+                                    ts);
+
+    return kIOReturnSuccess;
+  }
+
+  return kIOReturnError;
+}
+
+#pragma mark - update_event_flags
+
+IOReturn VIRTUAL_HID_ROOT_USERCLIENT_CLASS::staticUpdateEventFlagsCallback(VIRTUAL_HID_ROOT_USERCLIENT_CLASS* target,
+                                                                           void* reference,
+                                                                           IOExternalMethodArguments* arguments) {
+  if (!target) {
+    return kIOReturnBadArgument;
+  }
+  if (!arguments) {
+    return kIOReturnBadArgument;
+  }
+
+  if (auto flags = static_cast<const uint32_t*>(arguments->structureInput)) {
+    return target->updateEventFlagsCallback(*flags);
+  }
+
+  return kIOReturnBadArgument;
+}
+
+IOReturn VIRTUAL_HID_ROOT_USERCLIENT_CLASS::updateEventFlagsCallback(const uint32_t& flags) {
+  if (kernelMajorReleaseVersion_ < 16) {
+    IOLog(VIRTUAL_HID_ROOT_USERCLIENT_CLASS_STRING "::updateEventFlagsCallback requires macOS 10.12 or later.\n");
+    // IOHIDSystem::keyboardSpecialEvent is available since macOS Sierra.
+    // (This method exists in previous macOS releases, but it causes kernel panic.)
+    return kIOReturnUnsupported;
+  }
+
+  if (auto hidSystem = IOHIDSystem::instance()) {
+    AbsoluteTime ts;
+    clock_get_uptime(&ts);
+
+    hidSystem->updateEventFlags(flags);
     return kIOReturnSuccess;
   }
 

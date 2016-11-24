@@ -67,6 +67,16 @@ private:
                                                   IOExternalMethodArguments* arguments);
   IOReturn postKeyboardEventCallback(const pqrs::karabiner_virtualhiddevice::keyboard_event& keyboard_event);
 
+  static IOReturn staticPostKeyboardSpecialEventCallback(VIRTUAL_HID_ROOT_USERCLIENT_CLASS* target,
+                                                         void* reference,
+                                                         IOExternalMethodArguments* arguments);
+  IOReturn postKeyboardSpecialEventCallback(const pqrs::karabiner_virtualhiddevice::keyboard_special_event& keyboard_special_event);
+
+  static IOReturn staticUpdateEventFlagsCallback(VIRTUAL_HID_ROOT_USERCLIENT_CLASS* target,
+                                                 void* reference,
+                                                 IOExternalMethodArguments* arguments);
+  IOReturn updateEventFlagsCallback(const uint32_t& flags);
+
   static IOExternalMethodDispatch methods_[static_cast<size_t>(pqrs::karabiner_virtualhiddevice::user_client_method::end_)];
   int kernelMajorReleaseVersion_;
   VIRTUAL_HID_KEYBOARD_CLASS* virtualHIDKeyboard_;
