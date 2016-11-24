@@ -17,19 +17,19 @@ public:
       bool operator==(const hid_report::keyboard_input& other) const { return (memcmp(this, &other, sizeof(*this)) == 0); }
       bool operator!=(const hid_report::keyboard_input& other) const { return !(*this == other); }
 
-      // modifier bits
-      // 0x1 << 0 : left control
-      // 0x1 << 1 : left shift
-      // 0x1 << 2 : left option
-      // 0x1 << 3 : left command
-      // 0x1 << 4 : right control
-      // 0x1 << 5 : right shift
-      // 0x1 << 6 : right option
-      // 0x1 << 7 : right command
-
       uint8_t modifiers;
       uint8_t reserved;
       uint8_t keys[6];
+
+      // modifiers:
+      //   0x1 << 0 : left control
+      //   0x1 << 1 : left shift
+      //   0x1 << 2 : left option
+      //   0x1 << 3 : left command
+      //   0x1 << 4 : right control
+      //   0x1 << 5 : right shift
+      //   0x1 << 6 : right option
+      //   0x1 << 7 : right command
     };
 
     class __attribute__((packed)) pointing_input final {
