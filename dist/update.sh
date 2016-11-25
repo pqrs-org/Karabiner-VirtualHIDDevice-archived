@@ -5,8 +5,7 @@ PATH='/bin:/sbin:/usr/bin:/usr/sbin'; export PATH
 basedir=`dirname "$0"`
 cd "$basedir"
 
-bundle_identifier='org.pqrs.driver.VirtualHIDDevice.v020300'
-install_directory='/Library/Application Support/org.pqrs/Karabiner-VirtualHIDDevice'
+bundle_identifier='org.pqrs.driver.Karabiner.VirtualHIDDevice.v020400'
 
 # Skip if already installed
 if kextstat | grep -q "$bundle_identifier"; then
@@ -20,10 +19,7 @@ for kext in `kextstat | ruby -ne 'print $1,"\n" if /(org\.pqrs\.driver\.VirtualH
 done
 
 # Copy kext
-rm -rf "$install_directory"
-mkdir -p "$install_directory"
-cp -R include "$install_directory"
-cp -R org.pqrs.driver.VirtualHIDDevice.kext "$install_directory"
+cp -R org.pqrs.driver.Karabiner.VirtualHIDDevice.kext /Library/Extensions
 
 # Load kext
-kextload "$install_directory/org.pqrs.driver.VirtualHIDDevice.kext"
+kextload /Library/Extensions/org.pqrs.driver.Karabiner.VirtualHIDDevice.kext
