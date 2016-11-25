@@ -4,7 +4,7 @@ all: gitclean
 	rm -rf dist
 	mkdir -p dist
 	mkdir -p dist/include
-	cp -R src/build/Release/VirtualHIDDevice.kext dist/org.pqrs.driver.VirtualHIDDevice.kext
+	cp -R src/build/Release/VirtualHIDDevice.kext dist/org.pqrs.driver.Karabiner.VirtualHIDDevice.kext
 	cp src/include/karabiner_virtualhiddevice.hpp dist/include
 	cp scripts/update.sh dist
 	cp scripts/uninstall.sh dist
