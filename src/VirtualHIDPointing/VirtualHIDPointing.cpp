@@ -114,7 +114,7 @@ IOReturn VIRTUAL_HID_POINTING_CLASS::newReportDescriptor(IOMemoryDescriptor** de
 }
 
 OSString* VIRTUAL_HID_POINTING_CLASS::newSerialNumberString() const {
-  return OSString::withCString("org.pqrs.driver.VirtualHIDPointing");
+  return OSString::withCString("org.pqrs.driver.Karabiner.VirtualHIDDevice.VirtualHIDPointing");
 }
 
 OSNumber* VIRTUAL_HID_POINTING_CLASS::newLocationIDNumber() const {

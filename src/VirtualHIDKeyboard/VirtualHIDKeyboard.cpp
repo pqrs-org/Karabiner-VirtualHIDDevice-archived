@@ -71,7 +71,7 @@ IOReturn VIRTUAL_HID_KEYBOARD_CLASS::newReportDescriptor(IOMemoryDescriptor** de
 }
 
 OSString* VIRTUAL_HID_KEYBOARD_CLASS::newSerialNumberString() const {
-  return OSString::withCString("org.pqrs.driver.VirtualHIDKeyboard");
+  return OSString::withCString("org.pqrs.driver.Karabiner.VirtualHIDDevice.VirtualHIDKeyboard");
 }
 
 OSNumber* VIRTUAL_HID_KEYBOARD_CLASS::newLocationIDNumber() const {
