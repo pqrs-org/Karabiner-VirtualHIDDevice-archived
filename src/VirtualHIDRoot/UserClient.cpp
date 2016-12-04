@@ -1,12 +1,3 @@
-#include "DiagnosticMacros.hpp"
-
-BEGIN_IOKIT_INCLUDE;
-#include <IOKit/IOBufferMemoryDescriptor.h>
-#include <IOKit/IOLib.h>
-#include <IOKit/IOUserClient.h>
-#include <IOKit/hidsystem/IOHIDSystem.h>
-END_IOKIT_INCLUDE;
-
 #include "UserClient.hpp"
 
 #define super IOUserClient
@@ -82,7 +73,7 @@ IOExternalMethodDispatch VIRTUAL_HID_ROOT_USERCLIENT_CLASS::methods_[static_cast
         // post_keyboard_input_report
         reinterpret_cast<IOExternalMethodAction>(&staticPostKeyboardInputReportCallback), // Method pointer.
         0,                                                                                // No scalar input value.
-        sizeof(pqrs::karabiner_virtual_hid_device::hid_report::keyboard_input),             // One struct input value.
+        sizeof(pqrs::karabiner_virtual_hid_device::hid_report::keyboard_input),           // One struct input value.
         0,                                                                                // No scalar output value.
         0                                                                                 // No struct output value.
     },
@@ -118,7 +109,7 @@ IOExternalMethodDispatch VIRTUAL_HID_ROOT_USERCLIENT_CLASS::methods_[static_cast
         // post_pointing_input_report
         reinterpret_cast<IOExternalMethodAction>(&staticPostPointingInputReportCallback), // Method pointer.
         0,                                                                                // No scalar input value.
-        sizeof(pqrs::karabiner_virtual_hid_device::hid_report::pointing_input),             // One struct input value.
+        sizeof(pqrs::karabiner_virtual_hid_device::hid_report::pointing_input),           // One struct input value.
         0,                                                                                // No scalar output value.
         0                                                                                 // No struct output value.
     },
@@ -138,7 +129,7 @@ IOExternalMethodDispatch VIRTUAL_HID_ROOT_USERCLIENT_CLASS::methods_[static_cast
         // post_keyboard_event
         reinterpret_cast<IOExternalMethodAction>(&staticPostKeyboardEventCallback), // Method pointer.
         0,                                                                          // No scalar input value.
-        sizeof(pqrs::karabiner_virtual_hid_device::keyboard_event),                   // One struct input value.
+        sizeof(pqrs::karabiner_virtual_hid_device::keyboard_event),                 // One struct input value.
         0,                                                                          // No scalar output value.
         0                                                                           // No struct output value.
     },
@@ -146,7 +137,7 @@ IOExternalMethodDispatch VIRTUAL_HID_ROOT_USERCLIENT_CLASS::methods_[static_cast
         // post_keyboard_special_event
         reinterpret_cast<IOExternalMethodAction>(&staticPostKeyboardSpecialEventCallback), // Method pointer.
         0,                                                                                 // No scalar input value.
-        sizeof(pqrs::karabiner_virtual_hid_device::keyboard_special_event),                  // One struct input value.
+        sizeof(pqrs::karabiner_virtual_hid_device::keyboard_special_event),                // One struct input value.
         0,                                                                                 // No scalar output value.
         0                                                                                  // No struct output value.
     },
@@ -175,6 +166,8 @@ bool VIRTUAL_HID_ROOT_USERCLIENT_CLASS::initWithTask(task_t owningTask,
     return false;
   }
 
+  hidInterfaceDetector_.setIsTargetServiceCallback(VIRTUAL_HID_ROOT_USERCLIENT_CLASS::isTargetHIDInterface);
+  hidInterfaceDetector_.setNotifier("IOHIDInterface");
   kernelMajorReleaseVersion_ = KernelVersion::getMajorReleaseVersion();
   virtualHIDKeyboard_ = nullptr;
   virtualHIDPointing_ = nullptr;
@@ -197,6 +190,8 @@ IOReturn VIRTUAL_HID_ROOT_USERCLIENT_CLASS::clientClose(void) {
 
   TERMINATE_VIRTUAL_DEVICE(virtualHIDKeyboard_);
   TERMINATE_VIRTUAL_DEVICE(virtualHIDPointing_);
+
+  hidInterfaceDetector_.unsetNotifier();
 
   if (!terminate()) {
     IOLog("%s Error: terminate failed.\n", __PRETTY_FUNCTION__);
@@ -526,4 +521,16 @@ IOReturn VIRTUAL_HID_ROOT_USERCLIENT_CLASS::updateEventFlagsCallback(const uint3
   }
 
   return kIOReturnError;
+}
+
+bool VIRTUAL_HID_ROOT_USERCLIENT_CLASS::isTargetHIDInterface(IOService* service) {
+  if (auto interface = OSDynamicCast(IOHIDInterface, service)) {
+    if (auto serialNumber = interface->getSerialNumber()) {
+      if (serialNumber->isEqualTo("org.pqrs.driver.Karabiner.VirtualHIDDevice.VirtualHIDKeyboard")) {
+        return true;
+      }
+    }
+  }
+
+  return false;
 }
