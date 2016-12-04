@@ -2,16 +2,23 @@
 
 class ServiceDetector final {
 public:
+  typedef bool (*IsTargetServiceCallback)(IOService* service);
+
   ServiceDetector(const ServiceDetector&) = delete;
 
   ServiceDetector(void) : matchedNotifier_(nullptr),
-                          terminatedNotifier_(nullptr) {
+                          terminatedNotifier_(nullptr),
+                          isTargetServiceCallback_(nullptr) {
     services_ = OSArray::withCapacity(8);
   }
 
   ~ServiceDetector(void) {
     unsetNotifier();
     OSSafeReleaseNULL(services_);
+  }
+
+  void setIsTargetServiceCallback(IsTargetServiceCallback isTargetServiceCallback) {
+    isTargetServiceCallback_ = isTargetServiceCallback;
   }
 
   void setNotifier(const char* serviceName) {
@@ -65,15 +72,17 @@ private:
       return false;
     }
 
-    if (auto interface = OSDynamicCast(IOHIDInterface, newService)) {
-      if (auto serialNumber = interface->getSerialNumber()) {
-        if (serialNumber->isEqualTo("org.pqrs.driver.Karabiner.VirtualHIDDevice.VirtualHIDKeyboard")) {
-          if (services_) {
-            auto index = services_->getNextIndexOfObject(newService, 0);
-            if (index == static_cast<unsigned int>(-1)) {
-              services_->setObject(newService);
-            }
-          }
+    bool isTargetService = true;
+
+    if (isTargetServiceCallback_) {
+      isTargetService = isTargetServiceCallback_(newService);
+    }
+
+    if (isTargetService) {
+      if (services_) {
+        auto index = services_->getNextIndexOfObject(newService, 0);
+        if (index == static_cast<unsigned int>(-1)) {
+          services_->setObject(newService);
         }
       }
     }
@@ -108,4 +117,5 @@ private:
   OSArray* services_;
   IONotifier* matchedNotifier_;
   IONotifier* terminatedNotifier_;
+  IsTargetServiceCallback isTargetServiceCallback_;
 };
