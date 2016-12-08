@@ -526,7 +526,7 @@ IOReturn VIRTUAL_HID_ROOT_USERCLIENT_CLASS::updateEventFlagsCallback(const uint3
 bool VIRTUAL_HID_ROOT_USERCLIENT_CLASS::isTargetHIDInterface(IOService* service) {
   if (auto interface = OSDynamicCast(IOHIDInterface, service)) {
     if (auto serialNumber = interface->getSerialNumber()) {
-      if (serialNumber->isEqualTo("org.pqrs.driver.Karabiner.VirtualHIDDevice.VirtualHIDKeyboard")) {
+      if (serialNumber->isEqualTo(VIRTUAL_HID_KEYBOARD_CLASS::serialNumberCString())) {
         return true;
       }
     }
