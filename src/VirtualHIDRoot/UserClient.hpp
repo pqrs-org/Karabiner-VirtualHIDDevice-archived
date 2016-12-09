@@ -25,6 +25,9 @@ public:
                             void* securityToken,
                             UInt32 type) override;
 
+  virtual bool start(IOService* provider) override;
+  virtual void stop(IOService* provider) override;
+
   virtual IOReturn clientClose(void) override;
 
   virtual IOReturn externalMethod(uint32_t selector,
@@ -82,6 +85,13 @@ private:
   IOReturn resetVirtualHIDPointingCallback(void);
 
   // ----------------------------------------
+  // VirtualHIDEventService
+  static IOReturn staticDispatchKeyboardEventCallback(VIRTUAL_HID_ROOT_USERCLIENT_CLASS* target,
+                                                      void* reference,
+                                                      IOExternalMethodArguments* arguments);
+  IOReturn dispatchKeyboardEventCallback(const pqrs::karabiner_virtual_hid_device::hid_event_service::keyboard_event& keyboard_event);
+
+  // ----------------------------------------
   // IOHIDSystem
   static IOReturn staticPostKeyboardEventCallback(VIRTUAL_HID_ROOT_USERCLIENT_CLASS* target,
                                                   void* reference,
@@ -102,6 +112,7 @@ private:
   static bool isTargetHIDInterface(IOService* service);
 
   // ----------------------------------------
+  VIRTUAL_HID_ROOT_CLASS* provider_;
   ServiceDetector hidInterfaceDetector_;
   static IOExternalMethodDispatch methods_[static_cast<size_t>(pqrs::karabiner_virtual_hid_device::user_client_method::end_)];
   int kernelMajorReleaseVersion_;

@@ -123,6 +123,18 @@ IOExternalMethodDispatch VIRTUAL_HID_ROOT_USERCLIENT_CLASS::methods_[static_cast
     },
 
     // ----------------------------------------
+    // VirtualHIDEventService
+
+    {
+        // dispatch_keyboard_event
+        reinterpret_cast<IOExternalMethodAction>(&staticDispatchKeyboardEventCallback), // Method pointer.
+        0,                                                                              // No scalar input value.
+        sizeof(pqrs::karabiner_virtual_hid_device::hid_event_service::keyboard_event),  // One struct input value.
+        0,                                                                              // No scalar output value.
+        0                                                                               // No struct output value.
+    },
+
+    // ----------------------------------------
     // IOHIDSystem
 
     {
@@ -166,6 +178,7 @@ bool VIRTUAL_HID_ROOT_USERCLIENT_CLASS::initWithTask(task_t owningTask,
     return false;
   }
 
+  provider_ = nullptr;
   hidInterfaceDetector_.setIsTargetServiceCallback(VIRTUAL_HID_ROOT_USERCLIENT_CLASS::isTargetHIDInterface);
   hidInterfaceDetector_.setNotifier("IOHIDInterface");
   kernelMajorReleaseVersion_ = KernelVersion::getMajorReleaseVersion();
@@ -173,6 +186,28 @@ bool VIRTUAL_HID_ROOT_USERCLIENT_CLASS::initWithTask(task_t owningTask,
   virtualHIDPointing_ = nullptr;
 
   return true;
+}
+
+bool VIRTUAL_HID_ROOT_USERCLIENT_CLASS::start(IOService* provider) {
+  if (!super::start(provider)) {
+    return false;
+  }
+
+  provider_ = OSDynamicCast(VIRTUAL_HID_ROOT_CLASS, provider);
+  if (provider_) {
+    provider_->retain();
+  }
+
+  return true;
+}
+
+void VIRTUAL_HID_ROOT_USERCLIENT_CLASS::stop(IOService* provider) {
+  if (provider_) {
+    provider_->release();
+    provider_ = nullptr;
+  }
+
+  super::stop(provider);
 }
 
 IOReturn VIRTUAL_HID_ROOT_USERCLIENT_CLASS::clientClose(void) {
@@ -390,6 +425,36 @@ IOReturn VIRTUAL_HID_ROOT_USERCLIENT_CLASS::resetVirtualHIDPointingCallback(void
 
   pqrs::karabiner_virtual_hid_device::hid_report::pointing_input report;
   return postPointingInputReportCallback(report);
+}
+
+#pragma mark - dispatch_keyboard_event
+
+IOReturn VIRTUAL_HID_ROOT_USERCLIENT_CLASS::staticDispatchKeyboardEventCallback(VIRTUAL_HID_ROOT_USERCLIENT_CLASS* target,
+                                                                                void* reference,
+                                                                                IOExternalMethodArguments* arguments) {
+  if (!target) {
+    return kIOReturnBadArgument;
+  }
+  if (!arguments) {
+    return kIOReturnBadArgument;
+  }
+
+  if (auto keyboard_event = static_cast<const pqrs::karabiner_virtual_hid_device::hid_event_service::keyboard_event*>(arguments->structureInput)) {
+    return target->dispatchKeyboardEventCallback(*keyboard_event);
+  }
+
+  return kIOReturnBadArgument;
+}
+
+IOReturn VIRTUAL_HID_ROOT_USERCLIENT_CLASS::dispatchKeyboardEventCallback(const pqrs::karabiner_virtual_hid_device::hid_event_service::keyboard_event& keyboard_event) {
+  if (provider_) {
+    if (auto virtualHIDEventService = provider_->getVirtualHIDEventService()) {
+      virtualHIDEventService->dispatchKeyboardEvent(keyboard_event.usage_page, keyboard_event.usage, keyboard_event.value);
+      return kIOReturnSuccess;
+    }
+  }
+
+  return kIOReturnError;
 }
 
 #pragma mark - post_keyboard_event

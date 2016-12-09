@@ -68,6 +68,14 @@ public:
                                      nullptr, 0);
   }
 
+  // VirtualHIDEventService
+  static IOReturn dispatch_keyboard_event(mach_port_t connection, const karabiner_virtual_hid_device::hid_event_service::keyboard_event& keyboard_event) {
+    return IOConnectCallStructMethod(connection,
+                                     static_cast<uint32_t>(karabiner_virtual_hid_device::user_client_method::dispatch_keyboard_event),
+                                     &keyboard_event, sizeof(keyboard_event),
+                                     nullptr, 0);
+  }
+
   // IOHIDSystem (since macOS 10.12)
 
   static IOReturn post_keyboard_event(mach_port_t connection, const karabiner_virtual_hid_device::keyboard_event& keyboard_event) {

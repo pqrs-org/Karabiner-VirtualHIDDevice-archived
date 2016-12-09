@@ -3,6 +3,8 @@
 #pragma once
 
 // Do not use <cstring> for kext
+
+#include <IOKit/hid/IOHIDUsageTables.h>
 #include <stdint.h>
 #include <string.h>
 
@@ -52,6 +54,18 @@ public:
       // buttons[2] = (0x1 << 0) -> button 17
       // ...
       // buttons[3] = (0x1 << 0) -> button 25
+    };
+  };
+
+  class hid_event_service final {
+  public:
+    class __attribute__((packed)) keyboard_event final {
+    public:
+      keyboard_event(void) : usage_page(kHIDPage_KeyboardOrKeypad) {}
+
+      uint32_t usage_page;
+      uint32_t usage;
+      uint32_t value;
     };
   };
 
@@ -113,6 +127,9 @@ public:
     terminate_virtual_hid_pointing,
     post_pointing_input_report,
     reset_virtual_hid_pointing,
+
+    // VirtualHIDEventService
+    dispatch_keyboard_event,
 
     // IOHIDSystem (since macOS 10.12)
     post_keyboard_event,
