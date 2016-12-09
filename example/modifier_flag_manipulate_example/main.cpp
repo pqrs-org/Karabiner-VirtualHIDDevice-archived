@@ -62,6 +62,31 @@ int main(int argc, const char* argv[]) {
   }
 
   {
+    std::cout << "left control by VirtualHIDEventService (3 seconds)" << std::endl;
+
+    pqrs::karabiner_virtual_hid_device::hid_event_service::keyboard_event keyboard_event;
+    keyboard_event.usage = kHIDUsage_KeyboardRightControl;
+    keyboard_event.value = 1;
+
+    kr = pqrs::karabiner_virtual_hid_device_methods::dispatch_keyboard_event(connect, keyboard_event);
+    if (kr != KERN_SUCCESS) {
+      std::cerr << "dispatch_keyboard_event error" << std::endl;
+    }
+
+    for (int i = 0; i < 3; ++i) {
+      std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+      std::cout << (i + 1) << std::endl;
+    }
+
+    keyboard_event.value = 0;
+
+    kr = pqrs::karabiner_virtual_hid_device_methods::dispatch_keyboard_event(connect, keyboard_event);
+    if (kr != KERN_SUCCESS) {
+      std::cerr << "dispatch_keyboard_event error" << std::endl;
+    }
+  }
+
+  {
     std::cout << "left control by post_keyboard_event (3 seconds)" << std::endl;
 
     pqrs::karabiner_virtual_hid_device::keyboard_event keyboard_event;
