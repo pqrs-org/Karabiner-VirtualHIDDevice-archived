@@ -3,6 +3,8 @@
 #pragma once
 
 // Do not use <cstring> for kext
+
+#include <IOKit/hid/IOHIDUsageTables.h>
 #include <stdint.h>
 #include <string.h>
 
@@ -55,57 +57,24 @@ public:
     };
   };
 
-  enum class event_type : uint32_t {
-    key_down = 10,
-    key_up = 11,
-    flags_changed = 12,
-  };
-
-  class __attribute__((packed)) keyboard_event final {
+  class hid_event_service final {
   public:
-    keyboard_event(void) : event_type(event_type::key_down),
-                           flags(0),
-                           key(0),
-                           char_code(0),
-                           char_set(0),
-                           orig_char_code(0),
-                           orig_char_set(0),
-                           keyboard_type(0),
-                           repeat(false) {}
+    class __attribute__((packed)) keyboard_event final {
+    public:
+      keyboard_event(void) : usage_page(kHIDPage_KeyboardOrKeypad) {}
 
-    event_type event_type;
-    uint32_t flags;
-    uint32_t key;
-    uint32_t char_code;
-    uint32_t char_set;
-    uint32_t orig_char_code;
-    uint32_t orig_char_set;
-    uint32_t keyboard_type;
-    bool repeat;
-  };
-
-  class __attribute__((packed)) keyboard_special_event final {
-  public:
-    keyboard_special_event(void) : event_type(event_type::key_down),
-                                   flags(0),
-                                   key(0),
-                                   flavor(0),
-                                   guid(0),
-                                   repeat(false) {}
-
-    event_type event_type;
-    uint32_t flags;
-    uint32_t key;
-    uint32_t flavor;
-    uint64_t guid;
-    bool repeat;
+      uint32_t usage_page;
+      uint32_t usage;
+      uint32_t value;
+    };
   };
 
   enum class user_client_method {
     // VirtualHIDKeyboard
     initialize_virtual_hid_keyboard,
     terminate_virtual_hid_keyboard,
-    post_keyboard_input_report,
+    dispatch_keyboard_event,
+    post_keyboard_input_report, // not recommended
     reset_virtual_hid_keyboard,
 
     // VirtualHIDPointing
@@ -114,16 +83,11 @@ public:
     post_pointing_input_report,
     reset_virtual_hid_pointing,
 
-    // IOHIDSystem (since macOS 10.12)
-    post_keyboard_event,
-    post_keyboard_special_event,
-    update_event_flags,
-
     end_,
   };
 
   static const char* get_virtual_hid_root_name(void) {
-    return "org_pqrs_driver_Karabiner_VirtualHIDDevice_VirtualHIDRoot_v020900";
+    return "org_pqrs_driver_Karabiner_VirtualHIDDevice_VirtualHIDRoot_v030000";
   }
 };
 }
