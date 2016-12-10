@@ -61,7 +61,7 @@ You can confirm the issue of macOS by `appendix/dump_hid_report`.
 3. `make run`
 4. Enable `Secure Keyboard Entry` in Terminal.
 5. Open new tab in Terminal.
-6. `cd example/virtual_keyboard_example`
+6. `cd example/post_keyboard_input_report_example`
 7. `make`
 8. `make run`
 

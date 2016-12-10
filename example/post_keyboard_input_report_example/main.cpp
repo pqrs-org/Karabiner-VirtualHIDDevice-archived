@@ -14,7 +14,7 @@
 
 int main(int argc, const char* argv[]) {
   if (getuid() != 0) {
-    std::cerr << "dispatch_keyboard_event_example requires root privilege." << std::endl;
+    std::cerr << "virtual_keyboard_example requires root privilege." << std::endl;
   }
 
   kern_return_t kr;
@@ -35,67 +35,43 @@ int main(int argc, const char* argv[]) {
   if (kr != KERN_SUCCESS) {
     std::cerr << "initialize_virtual_hid_keyboard error" << std::endl;
   }
-  std::this_thread::sleep_for(std::chrono::milliseconds(500));
+  std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
   for (int i = 0; i < 12; ++i) {
-    pqrs::karabiner_virtual_hid_device::hid_event_service::keyboard_event keyboard_event;
-
+    pqrs::karabiner_virtual_hid_device::hid_report::keyboard_input report;
     switch (i % 6) {
     case 0:
-      keyboard_event.usage = kHIDUsage_KeyboardA;
-      keyboard_event.value = 1;
+      report.keys[0] = 0x04; // a
       break;
     case 1:
-      keyboard_event.usage = kHIDUsage_KeyboardA;
-      keyboard_event.value = 0;
+      report.keys[0] = 0x05; // b
       break;
     case 2:
-      keyboard_event.usage = kHIDUsage_KeyboardB;
-      keyboard_event.value = 1;
+      report.keys[0] = 0x06; // c
       break;
     case 3:
-      keyboard_event.usage = kHIDUsage_KeyboardB;
-      keyboard_event.value = 0;
+      report.keys[0] = 0x07; // d
       break;
     case 4:
-      keyboard_event.usage = kHIDUsage_KeyboardRightControl;
-      keyboard_event.value = 1;
+      report.keys[0] = 0x08; // e
       break;
     case 5:
-      keyboard_event.usage = kHIDUsage_KeyboardRightControl;
-      keyboard_event.value = 0;
+      // Send empty report
       break;
     }
 
-    kr = pqrs::karabiner_virtual_hid_device_methods::dispatch_keyboard_event(connect, keyboard_event);
+    kr = pqrs::karabiner_virtual_hid_device_methods::post_keyboard_input_report(connect, report);
     if (kr != KERN_SUCCESS) {
-      std::cerr << "dispatch_keyboard_event error" << std::endl;
+      std::cerr << "post_keyboard_input_report error" << std::endl;
     }
 
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
-  }
-
-  {
-    pqrs::karabiner_virtual_hid_device::hid_event_service::keyboard_event keyboard_event;
-    keyboard_event.usage = kHIDUsage_KeyboardC;
-    keyboard_event.value = 1;
-    kr = pqrs::karabiner_virtual_hid_device_methods::dispatch_keyboard_event(connect, keyboard_event);
-    if (kr != KERN_SUCCESS) {
-      std::cerr << "dispatch_keyboard_event error" << std::endl;
-    }
-    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
   }
 
   kr = pqrs::karabiner_virtual_hid_device_methods::reset_virtual_hid_keyboard(connect);
   if (kr != KERN_SUCCESS) {
     std::cerr << "reset_virtual_hid_keyboard error" << std::endl;
   }
-  std::this_thread::sleep_for(std::chrono::milliseconds(100));
-
-  std::cout << std::endl;
-  std::cout << "reset_virtual_hid_keyboard is called" << std::endl;
-
-  std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
 finish:
   if (connect) {
