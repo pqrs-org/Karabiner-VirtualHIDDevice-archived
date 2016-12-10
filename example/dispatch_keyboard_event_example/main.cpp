@@ -31,6 +31,12 @@ int main(int argc, const char* argv[]) {
     goto finish;
   }
 
+  kr = pqrs::karabiner_virtual_hid_device_methods::initialize_virtual_hid_keyboard(connect);
+  if (kr != KERN_SUCCESS) {
+    std::cerr << "initialize_virtual_hid_keyboard error" << std::endl;
+  }
+  std::this_thread::sleep_for(std::chrono::milliseconds(500));
+
   for (int i = 0; i < 12; ++i) {
     pqrs::karabiner_virtual_hid_device::hid_event_service::keyboard_event keyboard_event;
 
@@ -67,6 +73,11 @@ int main(int argc, const char* argv[]) {
     }
 
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
+  }
+
+  kr = pqrs::karabiner_virtual_hid_device_methods::reset_virtual_hid_keyboard(connect);
+  if (kr != KERN_SUCCESS) {
+    std::cerr << "reset_virtual_hid_keyboard error" << std::endl;
   }
 
 finish:

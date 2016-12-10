@@ -33,14 +33,14 @@ int main(int argc, const char* argv[]) {
     goto finish;
   }
 
+  kr = pqrs::karabiner_virtual_hid_device_methods::initialize_virtual_hid_keyboard(connect);
+  if (kr != KERN_SUCCESS) {
+    std::cerr << "initialize_virtual_hid_keyboard error" << std::endl;
+  }
+  std::this_thread::sleep_for(std::chrono::milliseconds(500));
+
   {
     std::cout << "left control by virtual_hid_keyboard (3 seconds)" << std::endl;
-
-    kr = pqrs::karabiner_virtual_hid_device_methods::initialize_virtual_hid_keyboard(connect);
-    if (kr != KERN_SUCCESS) {
-      std::cerr << "initialize_virtual_hid_keyboard error" << std::endl;
-    }
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
     pqrs::karabiner_virtual_hid_device::hid_report::keyboard_input report;
     report.modifiers = 0x01;
@@ -53,11 +53,6 @@ int main(int argc, const char* argv[]) {
     for (int i = 0; i < 3; ++i) {
       std::this_thread::sleep_for(std::chrono::milliseconds(1000));
       std::cout << (i + 1) << std::endl;
-    }
-
-    kr = pqrs::karabiner_virtual_hid_device_methods::terminate_virtual_hid_keyboard(connect);
-    if (kr != KERN_SUCCESS) {
-      std::cerr << "terminate_virtual_hid_keyboard error" << std::endl;
     }
   }
 
@@ -153,6 +148,11 @@ int main(int argc, const char* argv[]) {
         }
       }
     }
+  }
+
+  kr = pqrs::karabiner_virtual_hid_device_methods::terminate_virtual_hid_keyboard(connect);
+  if (kr != KERN_SUCCESS) {
+    std::cerr << "terminate_virtual_hid_keyboard error" << std::endl;
   }
 
 finish:
