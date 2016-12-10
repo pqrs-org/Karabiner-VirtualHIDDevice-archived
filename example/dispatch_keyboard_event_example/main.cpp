@@ -75,6 +75,17 @@ int main(int argc, const char* argv[]) {
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }
 
+  {
+    pqrs::karabiner_virtual_hid_device::hid_event_service::keyboard_event keyboard_event;
+    keyboard_event.usage = kHIDUsage_KeyboardC;
+    keyboard_event.value = 1;
+    kr = pqrs::karabiner_virtual_hid_device_methods::dispatch_keyboard_event(connect, keyboard_event);
+    if (kr != KERN_SUCCESS) {
+      std::cerr << "dispatch_keyboard_event error" << std::endl;
+    }
+    std::this_thread::sleep_for(std::chrono::milliseconds(3000));
+  }
+
   kr = pqrs::karabiner_virtual_hid_device_methods::reset_virtual_hid_keyboard(connect);
   if (kr != KERN_SUCCESS) {
     std::cerr << "reset_virtual_hid_keyboard error" << std::endl;
