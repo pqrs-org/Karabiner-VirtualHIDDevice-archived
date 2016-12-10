@@ -350,8 +350,23 @@ IOReturn VIRTUAL_HID_ROOT_USERCLIENT_CLASS::resetVirtualHIDKeyboardCallback(void
     return kIOReturnSuccess;
   }
 
-  pqrs::karabiner_virtual_hid_device::hid_report::keyboard_input report;
-  return postKeyboardInputReportCallback(report);
+  bool result = kIOReturnSuccess;
+
+  // reset for dispatch_keyboard_event
+  if (virtualHIDEventService_) {
+    virtualHIDEventService_->dispatchKeyUpAllPressedKeys();
+  }
+
+  // reset for post_keyboard_input_report
+  {
+    pqrs::karabiner_virtual_hid_device::hid_report::keyboard_input report;
+    auto kr = postKeyboardInputReportCallback(report);
+    if (kr != kIOReturnSuccess) {
+      result = kIOReturnError;
+    }
+  }
+
+  return result;
 }
 
 #pragma mark - reset_virtual_hid_pointing
@@ -447,6 +462,8 @@ bool VIRTUAL_HID_ROOT_USERCLIENT_CLASS::initializeVirtualHIDEventService(IOHIDIn
 
 void VIRTUAL_HID_ROOT_USERCLIENT_CLASS::terminateVirtualHIDEventService(void) {
   if (virtualHIDEventService_) {
+    virtualHIDEventService_->dispatchKeyUpAllPressedKeys();
+
     virtualHIDEventService_->terminate(kIOServiceSynchronous);
     virtualHIDEventService_->release();
     virtualHIDEventService_ = nullptr;

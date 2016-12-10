@@ -16,7 +16,9 @@ public:
   virtual OSArray* getReportElements(void) override { return reportElements_; }
 
   void dispatchKeyboardEvent(UInt32 usagePage, UInt32 usage, UInt32 value);
+  void dispatchKeyUpAllPressedKeys(void);
 
 private:
   OSArray* reportElements_;
+  UInt64 pressedKeys_[254];
 };

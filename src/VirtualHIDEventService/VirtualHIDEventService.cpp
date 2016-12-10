@@ -13,6 +13,10 @@ bool VIRTUAL_HID_EVENT_SERVICE_CLASS::handleStart(IOService* provider) {
   }
   reportElements_ = hidInterface->createMatchingElements();
 
+  for (size_t i = 0; i < sizeof(pressedKeys_) / sizeof(pressedKeys_[0]); ++i) {
+    pressedKeys_[i] = 0;
+  }
+
   return super::handleStart(provider);
 }
 
@@ -34,4 +38,35 @@ void VIRTUAL_HID_EVENT_SERVICE_CLASS::dispatchKeyboardEvent(UInt32 usagePage, UI
   IOOptionBits options = 0;
 
   super::dispatchKeyboardEvent(ts, usagePage, usage, value, options);
+
+  // Register to pressedKeys_
+  {
+    auto pressedKey = (static_cast<UInt64>(usagePage) << 32) | usage;
+
+    for (size_t i = 0; i < sizeof(pressedKeys_) / sizeof(pressedKeys_[0]); ++i) {
+      if (pressedKeys_[i] == pressedKey) {
+        pressedKeys_[i] = 0;
+      }
+    }
+
+    if (value) {
+      for (size_t i = 0; i < sizeof(pressedKeys_) / sizeof(pressedKeys_[0]); ++i) {
+        if (pressedKeys_[i] == 0) {
+          pressedKeys_[i] = pressedKey;
+          break;
+        }
+      }
+    }
+  }
+}
+
+void VIRTUAL_HID_EVENT_SERVICE_CLASS::dispatchKeyUpAllPressedKeys(void) {
+  for (size_t i = 0; i < sizeof(pressedKeys_) / sizeof(pressedKeys_[0]); ++i) {
+    if (pressedKeys_[i] != 0) {
+      UInt32 usagePage = static_cast<UInt32>((pressedKeys_[i] >> 32) & 0xffffffff);
+      UInt32 usage = static_cast<UInt32>(pressedKeys_[i] & 0xffffffff);
+      dispatchKeyboardEvent(usagePage, usage, 0);
+      pressedKeys_[i] = 0;
+    }
+  }
 }
