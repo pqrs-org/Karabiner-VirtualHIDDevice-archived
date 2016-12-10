@@ -83,13 +83,19 @@ int main(int argc, const char* argv[]) {
     if (kr != KERN_SUCCESS) {
       std::cerr << "dispatch_keyboard_event error" << std::endl;
     }
-    std::this_thread::sleep_for(std::chrono::milliseconds(3000));
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
   }
 
   kr = pqrs::karabiner_virtual_hid_device_methods::reset_virtual_hid_keyboard(connect);
   if (kr != KERN_SUCCESS) {
     std::cerr << "reset_virtual_hid_keyboard error" << std::endl;
   }
+  std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+  std::cout << std::endl;
+  std::cout << "reset_virtual_hid_keyboard is called" << std::endl;
+
+  std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
 finish:
   if (connect) {
