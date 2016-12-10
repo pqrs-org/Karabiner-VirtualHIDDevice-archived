@@ -51,10 +51,10 @@ Execute the following instructions in Terminal.
 
 ## Caution
 
-macOS has an issue that macOS ignores EnableSecureEventInput for input events from VirtualHIDKeyboard.
-Thus, do not use VirtualHIDKeyboard to post normal (alphabet, numbers) keyboard events in order to avoid leaking the passwords.
+macOS has an issue that macOS ignores EnableSecureEventInput for input events from `post_keyboard_input_report`.
+Thus, use `dispatch_keyboard_event` to post keyboard events via VirtualHIDKeyboard.
 
-You can show InputReportCallback value by `appendix/dump_hid_report`.
+You can confirm the issue of macOS by `appendix/dump_hid_report`.
 
 1. `cd appendix/dump_hid_report`
 2. `make`
