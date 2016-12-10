@@ -2,13 +2,14 @@
 
 class ServiceDetector final {
 public:
-  typedef bool (*IsTargetServiceCallback)(IOService* service);
+  typedef bool (*IsTargetServiceCallback)(IOService* service, IOService* refCon);
 
   ServiceDetector(const ServiceDetector&) = delete;
 
   ServiceDetector(void) : matchedNotifier_(nullptr),
                           terminatedNotifier_(nullptr),
-                          isTargetServiceCallback_(nullptr) {
+                          isTargetServiceCallback_(nullptr),
+                          isTargetServiceCallbackRefCon_(nullptr) {
     services_ = OSArray::withCapacity(8);
   }
 
@@ -17,8 +18,22 @@ public:
     OSSafeReleaseNULL(services_);
   }
 
-  void setIsTargetServiceCallback(IsTargetServiceCallback isTargetServiceCallback) {
+  void setIsTargetServiceCallback(IsTargetServiceCallback isTargetServiceCallback, IOService* isTargetServiceCallbackRefCon) {
     isTargetServiceCallback_ = isTargetServiceCallback;
+    isTargetServiceCallbackRefCon_ = isTargetServiceCallbackRefCon;
+
+    if (isTargetServiceCallbackRefCon_) {
+      isTargetServiceCallbackRefCon_->retain();
+    }
+  }
+
+  void unsetIsTargetServiceCallback(void) {
+    if (isTargetServiceCallbackRefCon_) {
+      isTargetServiceCallbackRefCon_->release();
+      isTargetServiceCallbackRefCon_ = nullptr;
+    }
+
+    isTargetServiceCallback_ = nullptr;
   }
 
   void setNotifier(const char* serviceName) {
@@ -75,7 +90,7 @@ private:
     bool isTargetService = true;
 
     if (isTargetServiceCallback_) {
-      isTargetService = isTargetServiceCallback_(newService);
+      isTargetService = isTargetServiceCallback_(newService, isTargetServiceCallbackRefCon_);
     }
 
     if (isTargetService) {
@@ -117,5 +132,7 @@ private:
   OSArray* services_;
   IONotifier* matchedNotifier_;
   IONotifier* terminatedNotifier_;
+
   IsTargetServiceCallback isTargetServiceCallback_;
+  IOService* isTargetServiceCallbackRefCon_;
 };
