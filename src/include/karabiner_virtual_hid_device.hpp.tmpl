@@ -119,7 +119,8 @@ public:
     // VirtualHIDKeyboard
     initialize_virtual_hid_keyboard,
     terminate_virtual_hid_keyboard,
-    post_keyboard_input_report,
+    dispatch_keyboard_event,
+    post_keyboard_input_report, // not recommended
     reset_virtual_hid_keyboard,
 
     // VirtualHIDPointing
@@ -127,9 +128,6 @@ public:
     terminate_virtual_hid_pointing,
     post_pointing_input_report,
     reset_virtual_hid_pointing,
-
-    // VirtualHIDEventService
-    dispatch_keyboard_event,
 
     // IOHIDSystem (since macOS 10.12)
     post_keyboard_event,
