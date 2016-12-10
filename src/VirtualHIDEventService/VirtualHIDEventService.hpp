@@ -11,5 +11,12 @@ class VIRTUAL_HID_EVENT_SERVICE_CLASS final : public IOHIDEventService {
   OSDeclareDefaultStructors(VIRTUAL_HID_EVENT_SERVICE_CLASS);
 
 public:
+  virtual bool handleStart(IOService* provider) override;
+  virtual void handleStop(IOService* provider) override;
+  virtual OSArray* getReportElements(void) override { return reportElements_; }
+
   void dispatchKeyboardEvent(UInt32 usagePage, UInt32 usage, UInt32 value);
+
+private:
+  OSArray* reportElements_;
 };
