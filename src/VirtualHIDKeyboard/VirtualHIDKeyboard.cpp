@@ -72,11 +72,11 @@ OSNumber* VIRTUAL_HID_KEYBOARD_CLASS::newProductIDNumber() const {
 }
 
 OSNumber* VIRTUAL_HID_KEYBOARD_CLASS::newPrimaryUsageNumber() const {
-  return OSNumber::withNumber(static_cast<uint32_t>(kHIDPage_GenericDesktop), 32);
+  return OSNumber::withNumber(static_cast<uint32_t>(kHIDUsage_GD_Keyboard), 32);
 }
 
 OSNumber* VIRTUAL_HID_KEYBOARD_CLASS::newPrimaryUsagePageNumber() const {
-  return OSNumber::withNumber(static_cast<uint32_t>(kHIDUsage_GD_Keyboard), 32);
+  return OSNumber::withNumber(static_cast<uint32_t>(kHIDPage_GenericDesktop), 32);
 }
 
 IOReturn VIRTUAL_HID_KEYBOARD_CLASS::newReportDescriptor(IOMemoryDescriptor** descriptor) const {
