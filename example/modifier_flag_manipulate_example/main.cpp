@@ -43,7 +43,7 @@ int main(int argc, const char* argv[]) {
     std::cout << "left control by dispatch_keyboard_event (3 seconds)" << std::endl;
 
     pqrs::karabiner_virtual_hid_device::hid_event_service::keyboard_event keyboard_event;
-    keyboard_event.usage = kHIDUsage_KeyboardLeftControl;
+    keyboard_event.usage = pqrs::karabiner_virtual_hid_device::usage(kHIDUsage_KeyboardLeftControl);
     keyboard_event.value = 1;
 
     kr = pqrs::karabiner_virtual_hid_device_methods::dispatch_keyboard_event(connect, keyboard_event);
