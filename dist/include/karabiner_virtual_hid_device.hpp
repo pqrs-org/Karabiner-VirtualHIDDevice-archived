@@ -3,25 +3,35 @@
 #pragma once
 
 // Do not use <cstring> for kext
-
-#include <IOKit/hid/IOHIDUsageTables.h>
 #include <stdint.h>
 #include <string.h>
 
 namespace pqrs {
 class karabiner_virtual_hid_device final {
 public:
+  enum class usage_page : uint32_t {
+    generic_desktop = 0x01,
+    keyboard_or_keypad = 0x07,
+    apple_vendor_top_case = 0xff,
+  };
+
+  enum class usage : uint32_t {
+    gd_keyboard = 0x06,
+    av_top_case_keyboard_fn = 0x03,
+  };
+
   class hid_report final {
   public:
     class __attribute__((packed)) keyboard_input final {
     public:
-      keyboard_input(void) : modifiers(0), reserved(0), keys{} {}
+      keyboard_input(void) : modifiers(0), reserved(0), keys{}, apple_vendor_fn(0) {}
       bool operator==(const hid_report::keyboard_input& other) const { return (memcmp(this, &other, sizeof(*this)) == 0); }
       bool operator!=(const hid_report::keyboard_input& other) const { return !(*this == other); }
 
       uint8_t modifiers;
       uint8_t reserved;
       uint8_t keys[6];
+      uint8_t apple_vendor_fn;
 
       // modifiers:
       //   0x1 << 0 : left control
@@ -61,10 +71,10 @@ public:
   public:
     class __attribute__((packed)) keyboard_event final {
     public:
-      keyboard_event(void) : usage_page(kHIDPage_KeyboardOrKeypad) {}
+      keyboard_event(void) : usage_page(usage_page::keyboard_or_keypad) {}
 
-      uint32_t usage_page;
-      uint32_t usage;
+      usage_page usage_page;
+      usage usage;
       uint32_t value;
     };
   };
@@ -87,7 +97,7 @@ public:
   };
 
   static const char* get_virtual_hid_root_name(void) {
-    return "org_pqrs_driver_Karabiner_VirtualHIDDevice_VirtualHIDRoot_v030000";
+    return "org_pqrs_driver_Karabiner_VirtualHIDDevice_VirtualHIDRoot_v030100";
   }
 };
 }
