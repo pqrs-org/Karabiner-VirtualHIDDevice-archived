@@ -12,12 +12,24 @@ public:
   enum class usage_page : uint32_t {
     generic_desktop = 0x01,
     keyboard_or_keypad = 0x07,
+
+    // from AppleHIDUsageTables.h
     apple_vendor_top_case = 0xff,
+    apple_vendor_keyboard = 0xff01,
   };
 
   enum class usage : uint32_t {
     gd_keyboard = 0x06,
     av_top_case_keyboard_fn = 0x03,
+
+    // from AppleHIDUsageTables.h
+    apple_vendor_keyboard_spotlight = 0x01,
+    apple_vendor_keyboard_dashboard = 0x02,
+    apple_vendor_keyboard_launchpad = 0x04,
+    apple_vendor_keyboard_expose_all = 0x10,
+    apple_vendor_keyboard_expose_desktop = 0x11,
+    apple_vendor_keyboard_brightness_up = 0x20,
+    apple_vendor_keyboard_brightness_down = 0x21,
   };
 
   class hid_report final {
@@ -97,7 +109,7 @@ public:
   };
 
   static const char* get_virtual_hid_root_name(void) {
-    return "org_pqrs_driver_Karabiner_VirtualHIDDevice_VirtualHIDRoot_v030100";
+    return "org_pqrs_driver_Karabiner_VirtualHIDDevice_VirtualHIDRoot_v030200";
   }
 };
 }
