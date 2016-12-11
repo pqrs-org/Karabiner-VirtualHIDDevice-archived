@@ -29,7 +29,9 @@ void VIRTUAL_HID_EVENT_SERVICE_CLASS::handleStop(IOService* provider) {
   }
 }
 
-void VIRTUAL_HID_EVENT_SERVICE_CLASS::dispatchKeyboardEvent(UInt32 usagePage, UInt32 usage, UInt32 value) {
+void VIRTUAL_HID_EVENT_SERVICE_CLASS::dispatchKeyboardEvent(pqrs::karabiner_virtual_hid_device::usage_page usagePage,
+                                                            pqrs::karabiner_virtual_hid_device::usage usage,
+                                                            UInt32 value) {
   AbsoluteTime ts;
   clock_get_uptime(&ts);
 
@@ -37,11 +39,11 @@ void VIRTUAL_HID_EVENT_SERVICE_CLASS::dispatchKeyboardEvent(UInt32 usagePage, UI
   // * kHIDDispatchOptionKeyboardNoRepeat
   IOOptionBits options = 0;
 
-  super::dispatchKeyboardEvent(ts, usagePage, usage, value, options);
+  super::dispatchKeyboardEvent(ts, static_cast<UInt32>(usagePage), static_cast<UInt32>(usage), value, options);
 
   // Register to pressedKeys_
   {
-    auto pressedKey = (static_cast<UInt64>(usagePage) << 32) | usage;
+    auto pressedKey = (static_cast<UInt64>(usagePage) << 32) | static_cast<UInt64>(usage);
 
     for (size_t i = 0; i < sizeof(pressedKeys_) / sizeof(pressedKeys_[0]); ++i) {
       if (pressedKeys_[i] == pressedKey) {
@@ -65,7 +67,9 @@ void VIRTUAL_HID_EVENT_SERVICE_CLASS::dispatchKeyUpAllPressedKeys(void) {
     if (pressedKeys_[i] != 0) {
       UInt32 usagePage = static_cast<UInt32>((pressedKeys_[i] >> 32) & 0xffffffff);
       UInt32 usage = static_cast<UInt32>(pressedKeys_[i] & 0xffffffff);
-      dispatchKeyboardEvent(usagePage, usage, 0);
+      dispatchKeyboardEvent(pqrs::karabiner_virtual_hid_device::usage_page(usagePage),
+                            pqrs::karabiner_virtual_hid_device::usage(usage),
+                            0);
       pressedKeys_[i] = 0;
     }
   }

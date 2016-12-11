@@ -37,32 +37,50 @@ int main(int argc, const char* argv[]) {
   }
   std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
-  for (int i = 0; i < 12; ++i) {
+  for (int i = 0; i < 20; ++i) {
     pqrs::karabiner_virtual_hid_device::hid_event_service::keyboard_event keyboard_event;
 
-    switch (i % 6) {
+    switch (i % 10) {
     case 0:
-      keyboard_event.usage = kHIDUsage_KeyboardA;
+      keyboard_event.usage = pqrs::karabiner_virtual_hid_device::usage(kHIDUsage_KeyboardA);
       keyboard_event.value = 1;
       break;
     case 1:
-      keyboard_event.usage = kHIDUsage_KeyboardA;
+      keyboard_event.usage = pqrs::karabiner_virtual_hid_device::usage(kHIDUsage_KeyboardA);
       keyboard_event.value = 0;
       break;
     case 2:
-      keyboard_event.usage = kHIDUsage_KeyboardB;
+      keyboard_event.usage = pqrs::karabiner_virtual_hid_device::usage(kHIDUsage_KeyboardB);
       keyboard_event.value = 1;
       break;
     case 3:
-      keyboard_event.usage = kHIDUsage_KeyboardB;
+      keyboard_event.usage = pqrs::karabiner_virtual_hid_device::usage(kHIDUsage_KeyboardB);
       keyboard_event.value = 0;
       break;
     case 4:
-      keyboard_event.usage = kHIDUsage_KeyboardRightControl;
+      keyboard_event.usage = pqrs::karabiner_virtual_hid_device::usage(kHIDUsage_KeyboardRightControl);
       keyboard_event.value = 1;
       break;
     case 5:
-      keyboard_event.usage = kHIDUsage_KeyboardRightControl;
+      keyboard_event.usage = pqrs::karabiner_virtual_hid_device::usage(kHIDUsage_KeyboardRightControl);
+      keyboard_event.value = 0;
+      break;
+    case 6:
+      keyboard_event.usage_page = pqrs::karabiner_virtual_hid_device::usage_page::apple_vendor_top_case;
+      keyboard_event.usage = pqrs::karabiner_virtual_hid_device::usage::av_top_case_keyboard_fn;
+      keyboard_event.value = 1;
+      break;
+    case 7:
+      keyboard_event.usage = pqrs::karabiner_virtual_hid_device::usage(kHIDUsage_KeyboardQ);
+      keyboard_event.value = 1;
+      break;
+    case 8:
+      keyboard_event.usage = pqrs::karabiner_virtual_hid_device::usage(kHIDUsage_KeyboardQ);
+      keyboard_event.value = 0;
+      break;
+    case 9:
+      keyboard_event.usage_page = pqrs::karabiner_virtual_hid_device::usage_page::apple_vendor_top_case;
+      keyboard_event.usage = pqrs::karabiner_virtual_hid_device::usage::av_top_case_keyboard_fn;
       keyboard_event.value = 0;
       break;
     }
@@ -77,7 +95,7 @@ int main(int argc, const char* argv[]) {
 
   {
     pqrs::karabiner_virtual_hid_device::hid_event_service::keyboard_event keyboard_event;
-    keyboard_event.usage = kHIDUsage_KeyboardC;
+    keyboard_event.usage = pqrs::karabiner_virtual_hid_device::usage(kHIDUsage_KeyboardC);
     keyboard_event.value = 1;
     kr = pqrs::karabiner_virtual_hid_device_methods::dispatch_keyboard_event(connect, keyboard_event);
     if (kr != KERN_SUCCESS) {
@@ -95,6 +113,7 @@ int main(int argc, const char* argv[]) {
   std::cout << std::endl;
 
   std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+  std::this_thread::sleep_for(std::chrono::milliseconds(1000000));
 
 finish:
   if (connect) {

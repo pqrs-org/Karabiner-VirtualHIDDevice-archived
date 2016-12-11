@@ -3,14 +3,23 @@
 #pragma once
 
 // Do not use <cstring> for kext
-
-#include <IOKit/hid/IOHIDUsageTables.h>
 #include <stdint.h>
 #include <string.h>
 
 namespace pqrs {
 class karabiner_virtual_hid_device final {
 public:
+  enum class usage_page : uint32_t {
+    generic_desktop = 0x01,
+    keyboard_or_keypad = 0x07,
+    apple_vendor_top_case = 0xff,
+  };
+
+  enum class usage : uint32_t {
+    gd_keyboard = 0x06,
+    av_top_case_keyboard_fn = 0x03,
+  };
+
   class hid_report final {
   public:
     class __attribute__((packed)) keyboard_input final {
@@ -61,10 +70,10 @@ public:
   public:
     class __attribute__((packed)) keyboard_event final {
     public:
-      keyboard_event(void) : usage_page(kHIDPage_KeyboardOrKeypad) {}
+      keyboard_event(void) : usage_page(usage_page::keyboard_or_keypad) {}
 
-      uint32_t usage_page;
-      uint32_t usage;
+      usage_page usage_page;
+      usage usage;
       uint32_t value;
     };
   };

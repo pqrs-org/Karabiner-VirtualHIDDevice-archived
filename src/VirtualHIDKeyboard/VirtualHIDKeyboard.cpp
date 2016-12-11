@@ -16,9 +16,11 @@ uint8_t reportDescriptor_[] = {
     0x75, 0x01,       //   Report Size............. (1)
     0x95, 0x08,       //   Report Count............ (8)
     0x81, 0x02,       //   Input...................(Data, Variable, Absolute)
+                      //
     0x95, 0x01,       //   Report Count............ (1)
     0x75, 0x08,       //   Report Size............. (8)
     0x81, 0x01,       //   Input...................(Constant)
+                      //
     0x95, 0x06,       //   Report Count............ (6)
     0x75, 0x08,       //   Report Size............. (8)
     0x15, 0x00,       //   Logical Minimum......... (0)
@@ -26,6 +28,15 @@ uint8_t reportDescriptor_[] = {
     0x05, 0x07,       //   Usage Page (Keyboard/Keypad)
     0x19, 0x00,       //   Usage Minimum........... (0)
     0x29, 0xff,       //   Usage Maximum........... (255)
+    0x81, 0x00,       //   Input...................(Data, Array, Absolute)
+                      //
+    0x05, 0xff,       //   Usage Page (kHIDPage_AppleVendorTopCase)
+    0x19, 0x03,       //   Usage Minimum........... (kHIDUsage_AV_TopCase_KeyboardFn)
+    0x29, 0x03,       //   Usage Maximum........... (kHIDUsage_AV_TopCase_KeyboardFn)
+    0x15, 0x00,       //   Logical Minimum......... (0)
+    0x26, 0xff, 0x00, //   Logical Maximum......... (255)
+    0x95, 0x01,       //   Report Count............ (1)
+    0x75, 0x08,       //   Report Size............. (8)
     0x81, 0x00,       //   Input...................(Data, Array, Absolute)
     0xc0,             // End Collection
 };
@@ -39,6 +50,7 @@ bool VIRTUAL_HID_KEYBOARD_CLASS::handleStart(IOService* provider) {
   // We have to set kIOHIDVirtualHIDevice to suppress Keyboard Setup Assistant.
   setProperty(kIOHIDVirtualHIDevice, kOSBooleanTrue);
   setProperty("HIDDefaultBehavior", kOSBooleanTrue);
+  setProperty("AppleVendorSupported", kOSBooleanTrue);
 
   return true;
 }
