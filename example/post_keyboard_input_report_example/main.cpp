@@ -41,19 +41,19 @@ int main(int argc, const char* argv[]) {
     pqrs::karabiner_virtual_hid_device::hid_report::keyboard_input report;
     switch (i % 6) {
     case 0:
-      report.keys[0] = 0x04; // a
+      report.keys[0] = kHIDUsage_KeyboardA;
       break;
     case 1:
-      report.keys[0] = 0x05; // b
+      report.keys[0] = kHIDUsage_KeyboardB;
       break;
     case 2:
-      report.keys[0] = 0x06; // c
+      report.keys[0] = kHIDUsage_KeyboardC;
       break;
     case 3:
-      report.keys[0] = 0x07; // d
+      report.keys[0] = kHIDUsage_KeyboardD;
       break;
     case 4:
-      report.keys[0] = 0x08; // e
+      report.keys[0] = kHIDUsage_KeyboardE;
       break;
     case 5:
       // Send empty report
