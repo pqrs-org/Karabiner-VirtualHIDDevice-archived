@@ -12,6 +12,7 @@ public:
   enum class usage_page : uint32_t {
     generic_desktop = 0x01,
     keyboard_or_keypad = 0x07,
+    consumer = 0x0c,
 
     // from AppleHIDUsageTables.h
     apple_vendor_top_case = 0xff,
@@ -21,6 +22,19 @@ public:
   enum class usage : uint32_t {
     gd_keyboard = 0x06,
     av_top_case_keyboard_fn = 0x03,
+
+    csmr_power = 0x30,
+    csmr_display_brightness_increment = 0x6f,
+    csmr_display_brightness_decrement = 0x70,
+    csmr_fastforward = 0xb3,
+    csmr_rewind = 0xb4,
+    csmr_scan_next_track = 0xb5,
+    csmr_scan_previous_track = 0xb6,
+    csmr_eject = 0xb8,
+    csmr_play_or_pause = 0xcd,
+    csmr_mute = 0xe2,
+    csmr_volume_decrement = 0xea,
+    csmr_volume_increment = 0xe9,
 
     // from AppleHIDUsageTables.h
     apple_vendor_keyboard_spotlight = 0x01,
@@ -36,10 +50,11 @@ public:
   public:
     class __attribute__((packed)) keyboard_input final {
     public:
-      keyboard_input(void) : modifiers(0), reserved(0), keys{}, apple_vendor_fn(0) {}
+      keyboard_input(void) : report_id(1), modifiers(0), reserved(0), keys{}, apple_vendor_fn(0) {}
       bool operator==(const hid_report::keyboard_input& other) const { return (memcmp(this, &other, sizeof(*this)) == 0); }
       bool operator!=(const hid_report::keyboard_input& other) const { return !(*this == other); }
 
+      uint8_t report_id;
       uint8_t modifiers;
       uint8_t reserved;
       uint8_t keys[6];
@@ -96,7 +111,7 @@ public:
     initialize_virtual_hid_keyboard,
     terminate_virtual_hid_keyboard,
     dispatch_keyboard_event,
-    post_keyboard_input_report, // not recommended
+    post_keyboard_input_report,
     reset_virtual_hid_keyboard,
 
     // VirtualHIDPointing
@@ -109,7 +124,7 @@ public:
   };
 
   static const char* get_virtual_hid_root_name(void) {
-    return "org_pqrs_driver_Karabiner_VirtualHIDDevice_VirtualHIDRoot_v030200";
+    return "org_pqrs_driver_Karabiner_VirtualHIDDevice_VirtualHIDRoot_v030300";
   }
 };
 }
