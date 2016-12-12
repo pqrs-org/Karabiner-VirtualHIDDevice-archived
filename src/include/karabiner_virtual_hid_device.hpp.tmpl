@@ -12,6 +12,7 @@ public:
   enum class usage_page : uint32_t {
     generic_desktop = 0x01,
     keyboard_or_keypad = 0x07,
+    consumer = 0x0c,
 
     // from AppleHIDUsageTables.h
     apple_vendor_top_case = 0xff,
@@ -21,6 +22,19 @@ public:
   enum class usage : uint32_t {
     gd_keyboard = 0x06,
     av_top_case_keyboard_fn = 0x03,
+
+    csmr_power = 0x30,
+    csmr_display_brightness_increment = 0x6f,
+    csmr_display_brightness_decrement = 0x70,
+    csmr_fastforward = 0xb3,
+    csmr_rewind = 0xb4,
+    csmr_scan_next_track = 0xb5,
+    csmr_scan_previous_track = 0xb6,
+    csmr_eject = 0xb8,
+    csmr_play_or_pause = 0xcd,
+    csmr_mute = 0xe2,
+    csmr_volume_decrement = 0xea,
+    csmr_volume_increment = 0xe9,
 
     // from AppleHIDUsageTables.h
     apple_vendor_keyboard_spotlight = 0x01,
