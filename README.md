@@ -48,21 +48,3 @@ Execute the following instructions in Terminal.
 2. `cd example/virtual_pointing_example`
 3. `make`
 4. `make run`
-
-## Caution
-
-macOS has an issue that macOS ignores EnableSecureEventInput for input events from `post_keyboard_input_report`.
-Thus, use `dispatch_keyboard_event` to post keyboard events via VirtualHIDKeyboard.
-
-You can confirm the issue of macOS by `appendix/dump_hid_report`.
-
-1. `cd appendix/dump_hid_report`
-2. `make`
-3. `make run`
-4. Enable `Secure Keyboard Entry` in Terminal.
-5. Open new tab in Terminal.
-6. `cd example/post_keyboard_input_report_example`
-7. `make`
-8. `make run`
-
-If you can see output in `dump_hid_report`, the virtual keyboard input is leaked.
