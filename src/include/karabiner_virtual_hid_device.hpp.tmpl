@@ -135,7 +135,7 @@ public:
     public:
       keyboard(void) : initial_key_repeat_nanoseconds(to_nanoseconds(milliseconds(500))),
                        key_repeat_nanoseconds(to_nanoseconds(milliseconds(83))),
-                       subinterface_id(subinterface_id::ansi) {}
+                       subinterface_id(subinterface_id::none) {}
 
       nanoseconds initial_key_repeat_nanoseconds;
       nanoseconds key_repeat_nanoseconds;
