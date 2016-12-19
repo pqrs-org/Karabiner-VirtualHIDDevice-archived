@@ -37,6 +37,19 @@ int main(int argc, const char* argv[]) {
   }
   std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
+#if 1
+  {
+    pqrs::karabiner_virtual_hid_device::properties::keyboard properties;
+    properties.subinterface_id = pqrs::karabiner_virtual_hid_device::properties::subinterface_id::none;
+    properties.initial_key_repeat_nanoseconds = pqrs::karabiner_virtual_hid_device::to_nanoseconds(pqrs::karabiner_virtual_hid_device::milliseconds(500));
+    properties.key_repeat_nanoseconds = pqrs::karabiner_virtual_hid_device::to_nanoseconds(pqrs::karabiner_virtual_hid_device::milliseconds(30));
+    kr = pqrs::karabiner_virtual_hid_device_methods::set_keyboard_properties(connect, properties);
+    if (kr != KERN_SUCCESS) {
+      std::cerr << "set_keyboard_properties error" << std::endl;
+    }
+  }
+#endif
+
   // ----------------------------------------
 
   for (int i = 0; i < 20; ++i) {
@@ -52,11 +65,11 @@ int main(int argc, const char* argv[]) {
       keyboard_event.value = 0;
       break;
     case 2:
-      keyboard_event.usage = pqrs::karabiner_virtual_hid_device::usage(kHIDUsage_KeyboardB);
+      keyboard_event.usage = pqrs::karabiner_virtual_hid_device::usage(kHIDUsage_KeyboardOpenBracket);
       keyboard_event.value = 1;
       break;
     case 3:
-      keyboard_event.usage = pqrs::karabiner_virtual_hid_device::usage(kHIDUsage_KeyboardB);
+      keyboard_event.usage = pqrs::karabiner_virtual_hid_device::usage(kHIDUsage_KeyboardOpenBracket);
       keyboard_event.value = 0;
       break;
     case 4:
