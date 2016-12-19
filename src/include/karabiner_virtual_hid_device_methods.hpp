@@ -74,5 +74,14 @@ public:
                                      nullptr, 0,
                                      nullptr, 0);
   }
+
+  // IOHIDSystem
+
+  static IOReturn set_keyboard_properties(mach_port_t connection, const karabiner_virtual_hid_device::properties::keyboard& properties) {
+    return IOConnectCallStructMethod(connection,
+                                     static_cast<uint32_t>(karabiner_virtual_hid_device::user_client_method::set_keyboard_properties),
+                                     &properties, sizeof(properties),
+                                     nullptr, 0);
+  }
 };
 }

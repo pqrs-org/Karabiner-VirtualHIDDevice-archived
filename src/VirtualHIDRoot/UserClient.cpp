@@ -129,6 +129,18 @@ IOExternalMethodDispatch VIRTUAL_HID_ROOT_USERCLIENT_CLASS::methods_[static_cast
         0,                                                                                // No scalar output value.
         0                                                                                 // No struct output value.
     },
+
+    // ----------------------------------------
+    // IOHIDSystem
+
+    {
+        // set_keyboard_properties
+        reinterpret_cast<IOExternalMethodAction>(&staticSetKeyboardPropertiesCallback), // Method pointer.
+        0,                                                                              // No scalar input value.
+        sizeof(pqrs::karabiner_virtual_hid_device::properties::keyboard),               // One struct input value.
+        0,                                                                              // No scalar output value.
+        0                                                                               // No struct output value.
+    },
 };
 
 bool VIRTUAL_HID_ROOT_USERCLIENT_CLASS::initWithTask(task_t owningTask,
@@ -417,6 +429,52 @@ IOReturn VIRTUAL_HID_ROOT_USERCLIENT_CLASS::dispatchKeyboardEventCallback(const 
 
   return kIOReturnError;
 }
+
+#pragma mark - set_keyboard_properties
+
+IOReturn VIRTUAL_HID_ROOT_USERCLIENT_CLASS::staticSetKeyboardPropertiesCallback(VIRTUAL_HID_ROOT_USERCLIENT_CLASS* target,
+                                                                                void* reference,
+                                                                                IOExternalMethodArguments* arguments) {
+  if (!target) {
+    return kIOReturnBadArgument;
+  }
+  if (!arguments) {
+    return kIOReturnBadArgument;
+  }
+
+  if (auto properties = static_cast<const pqrs::karabiner_virtual_hid_device::properties::keyboard*>(arguments->structureInput)) {
+    return target->setKeyboardPropertiesCallback(*properties);
+  }
+
+  return kIOReturnBadArgument;
+}
+
+IOReturn VIRTUAL_HID_ROOT_USERCLIENT_CLASS::setKeyboardPropertiesCallback(const pqrs::karabiner_virtual_hid_device::properties::keyboard& properties) {
+  if (auto hidSystem = IOHIDSystem::instance()) {
+    if (auto dict = OSDictionary::withCapacity(3)) {
+      if (auto number = OSNumber::withNumber(static_cast<uint64_t>(properties.initial_key_repeat_nanoseconds), 64)) {
+        dict->setObject(kIOHIDInitialKeyRepeatKey, number);
+        number->release();
+      }
+      if (auto number = OSNumber::withNumber(static_cast<uint64_t>(properties.key_repeat_nanoseconds), 64)) {
+        dict->setObject(kIOHIDKeyRepeatKey, number);
+        number->release();
+      }
+      if (auto number = OSNumber::withNumber(static_cast<uint32_t>(properties.subinterface_id), 32)) {
+        dict->setObject(kIOHIDSubinterfaceIDKey, number);
+        number->release();
+      }
+      hidSystem->setParamProperties(dict);
+      dict->release();
+
+      return kIOReturnSuccess;
+    }
+  }
+
+  return kIOReturnError;
+}
+
+#pragma mark - other methods
 
 bool VIRTUAL_HID_ROOT_USERCLIENT_CLASS::isTargetHIDInterface(IOService* service, IOService* refCon) {
   if (auto self = OSDynamicCast(VIRTUAL_HID_ROOT_USERCLIENT_CLASS, refCon)) {

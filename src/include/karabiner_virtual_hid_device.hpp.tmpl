@@ -52,6 +52,16 @@ public:
     apple_vendor_keyboard_brightness_down = 0x21,
   };
 
+  enum class milliseconds : uint64_t {
+  };
+
+  enum class nanoseconds : uint64_t {
+  };
+
+  static nanoseconds to_nanoseconds(milliseconds value) {
+    return nanoseconds(static_cast<uint64_t>(value) * 1000 * 1000);
+  }
+
   class hid_report final {
   public:
     class __attribute__((packed)) keyboard_input final {
@@ -112,6 +122,27 @@ public:
     };
   };
 
+  class properties final {
+  public:
+    enum class subinterface_id : uint32_t {
+      none = 0,
+      ansi = 40,
+      iso = 41,
+      jis = 42,
+    };
+
+    class __attribute__((packed)) keyboard final {
+    public:
+      keyboard(void) : initial_key_repeat_nanoseconds(to_nanoseconds(milliseconds(500))),
+                       key_repeat_nanoseconds(to_nanoseconds(milliseconds(83))),
+                       subinterface_id(subinterface_id::ansi) {}
+
+      nanoseconds initial_key_repeat_nanoseconds;
+      nanoseconds key_repeat_nanoseconds;
+      subinterface_id subinterface_id;
+    };
+  };
+
   enum class user_client_method {
     // VirtualHIDKeyboard
     initialize_virtual_hid_keyboard,
@@ -125,6 +156,9 @@ public:
     terminate_virtual_hid_pointing,
     post_pointing_input_report,
     reset_virtual_hid_pointing,
+
+    // IOHIDSystem
+    set_keyboard_properties,
 
     end_,
   };
