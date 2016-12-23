@@ -129,18 +129,6 @@ IOExternalMethodDispatch VIRTUAL_HID_ROOT_USERCLIENT_CLASS::methods_[static_cast
         0,                                                                                // No scalar output value.
         0                                                                                 // No struct output value.
     },
-
-    // ----------------------------------------
-    // IOHIDSystem
-
-    {
-        // set_global_keyboard_repeat_properties
-        reinterpret_cast<IOExternalMethodAction>(&staticSetGlobalKeyboardRepeatPropertiesCallback), // Method pointer.
-        0,                                                                                          // No scalar input value.
-        sizeof(pqrs::karabiner_virtual_hid_device::properties::keyboard_repeat),                    // One struct input value.
-        0,                                                                                          // No scalar output value.
-        0                                                                                           // No struct output value.
-    },
 };
 
 bool VIRTUAL_HID_ROOT_USERCLIENT_CLASS::initWithTask(task_t owningTask,
@@ -438,46 +426,6 @@ IOReturn VIRTUAL_HID_ROOT_USERCLIENT_CLASS::dispatchKeyboardEventCallback(const 
   if (virtualHIDEventService_) {
     virtualHIDEventService_->dispatchKeyboardEvent(keyboard_event.usage_page, keyboard_event.usage, keyboard_event.value);
     return kIOReturnSuccess;
-  }
-
-  return kIOReturnError;
-}
-
-#pragma mark - set_global_keyboard_repeat_properties
-
-IOReturn VIRTUAL_HID_ROOT_USERCLIENT_CLASS::staticSetGlobalKeyboardRepeatPropertiesCallback(VIRTUAL_HID_ROOT_USERCLIENT_CLASS* target,
-                                                                                            void* reference,
-                                                                                            IOExternalMethodArguments* arguments) {
-  if (!target) {
-    return kIOReturnBadArgument;
-  }
-  if (!arguments) {
-    return kIOReturnBadArgument;
-  }
-
-  if (auto properties = static_cast<const pqrs::karabiner_virtual_hid_device::properties::keyboard_repeat*>(arguments->structureInput)) {
-    return target->setGlobalKeyboardRepeatPropertiesCallback(*properties);
-  }
-
-  return kIOReturnBadArgument;
-}
-
-IOReturn VIRTUAL_HID_ROOT_USERCLIENT_CLASS::setGlobalKeyboardRepeatPropertiesCallback(const pqrs::karabiner_virtual_hid_device::properties::keyboard_repeat& properties) {
-  if (auto hidSystem = IOHIDSystem::instance()) {
-    if (auto dict = OSDictionary::withCapacity(2)) {
-      if (auto number = OSNumber::withNumber(static_cast<uint64_t>(properties.initial_key_repeat_nanoseconds), 64)) {
-        dict->setObject(kIOHIDInitialKeyRepeatKey, number);
-        number->release();
-      }
-      if (auto number = OSNumber::withNumber(static_cast<uint64_t>(properties.key_repeat_nanoseconds), 64)) {
-        dict->setObject(kIOHIDKeyRepeatKey, number);
-        number->release();
-      }
-      hidSystem->setParamProperties(dict);
-      dict->release();
-
-      return kIOReturnSuccess;
-    }
   }
 
   return kIOReturnError;

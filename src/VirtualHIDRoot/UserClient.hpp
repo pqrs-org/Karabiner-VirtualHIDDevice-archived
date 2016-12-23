@@ -88,13 +88,6 @@ private:
   IOReturn resetVirtualHIDPointingCallback(void);
 
   // ----------------------------------------
-  // IOHIDSystem
-  static IOReturn staticSetGlobalKeyboardRepeatPropertiesCallback(VIRTUAL_HID_ROOT_USERCLIENT_CLASS* target,
-                                                                  void* reference,
-                                                                  IOExternalMethodArguments* arguments);
-  IOReturn setGlobalKeyboardRepeatPropertiesCallback(const pqrs::karabiner_virtual_hid_device::properties::keyboard_repeat& properties);
-
-  // ----------------------------------------
   static bool isTargetHIDInterface(IOService* newService, IOService* refCon);
 
   bool initializeVirtualHIDEventService(IOHIDInterface* hidInterface);
