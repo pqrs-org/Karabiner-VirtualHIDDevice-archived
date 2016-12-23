@@ -10,10 +10,10 @@ class karabiner_virtual_hid_device_methods final {
 public:
   // VirtualHIDKeyboard
 
-  static IOReturn initialize_virtual_hid_keyboard(mach_port_t connection) {
+  static IOReturn initialize_virtual_hid_keyboard(mach_port_t connection, const karabiner_virtual_hid_device::properties::keyboard_initialization& properties) {
     return IOConnectCallStructMethod(connection,
                                      static_cast<uint32_t>(karabiner_virtual_hid_device::user_client_method::initialize_virtual_hid_keyboard),
-                                     nullptr, 0,
+                                     &properties, sizeof(properties),
                                      nullptr, 0);
   }
 
@@ -77,9 +77,9 @@ public:
 
   // IOHIDSystem
 
-  static IOReturn set_keyboard_properties(mach_port_t connection, const karabiner_virtual_hid_device::properties::keyboard& properties) {
+  static IOReturn set_global_keyboard_repeat_properties(mach_port_t connection, const karabiner_virtual_hid_device::properties::keyboard_repeat& properties) {
     return IOConnectCallStructMethod(connection,
-                                     static_cast<uint32_t>(karabiner_virtual_hid_device::user_client_method::set_keyboard_properties),
+                                     static_cast<uint32_t>(karabiner_virtual_hid_device::user_client_method::set_global_keyboard_repeat_properties),
                                      &properties, sizeof(properties),
                                      nullptr, 0);
   }

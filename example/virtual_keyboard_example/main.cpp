@@ -31,24 +31,19 @@ int main(int argc, const char* argv[]) {
     goto finish;
   }
 
-  kr = pqrs::karabiner_virtual_hid_device_methods::initialize_virtual_hid_keyboard(connect);
-  if (kr != KERN_SUCCESS) {
-    std::cerr << "initialize_virtual_hid_keyboard error" << std::endl;
-  }
-  std::this_thread::sleep_for(std::chrono::milliseconds(500));
-
-#if 1
   {
-    pqrs::karabiner_virtual_hid_device::properties::keyboard properties;
-    properties.subinterface_id = pqrs::karabiner_virtual_hid_device::properties::subinterface_id::none;
-    properties.initial_key_repeat_nanoseconds = pqrs::karabiner_virtual_hid_device::to_nanoseconds(pqrs::karabiner_virtual_hid_device::milliseconds(500));
-    properties.key_repeat_nanoseconds = pqrs::karabiner_virtual_hid_device::to_nanoseconds(pqrs::karabiner_virtual_hid_device::milliseconds(30));
-    kr = pqrs::karabiner_virtual_hid_device_methods::set_keyboard_properties(connect, properties);
-    if (kr != KERN_SUCCESS) {
-      std::cerr << "set_keyboard_properties error" << std::endl;
-    }
-  }
+    pqrs::karabiner_virtual_hid_device::properties::keyboard_initialization properties;
+#if 0
+    properties.keyboard_type = pqrs::karabiner_virtual_hid_device::properties::keyboard_type::jis;
+#else
+    properties.keyboard_type = pqrs::karabiner_virtual_hid_device::properties::keyboard_type::ansi;
 #endif
+    kr = pqrs::karabiner_virtual_hid_device_methods::initialize_virtual_hid_keyboard(connect, properties);
+    if (kr != KERN_SUCCESS) {
+      std::cerr << "initialize_virtual_hid_keyboard error" << std::endl;
+    }
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+  }
 
   // ----------------------------------------
 

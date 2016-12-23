@@ -43,7 +43,7 @@ private:
   static IOReturn staticInitializeVirtualHIDKeyboardCallback(VIRTUAL_HID_ROOT_USERCLIENT_CLASS* target,
                                                              void* reference,
                                                              IOExternalMethodArguments* arguments);
-  IOReturn initializeVirtualHIDKeyboardCallback(void);
+  IOReturn initializeVirtualHIDKeyboardCallback(const pqrs::karabiner_virtual_hid_device::properties::keyboard_initialization& properties);
 
   static IOReturn staticTerminateVirtualHIDKeyboardCallback(VIRTUAL_HID_ROOT_USERCLIENT_CLASS* target,
                                                             void* reference,
@@ -89,10 +89,10 @@ private:
 
   // ----------------------------------------
   // IOHIDSystem
-  static IOReturn staticSetKeyboardPropertiesCallback(VIRTUAL_HID_ROOT_USERCLIENT_CLASS* target,
-                                                      void* reference,
-                                                      IOExternalMethodArguments* arguments);
-  IOReturn setKeyboardPropertiesCallback(const pqrs::karabiner_virtual_hid_device::properties::keyboard& properties);
+  static IOReturn staticSetGlobalKeyboardRepeatPropertiesCallback(VIRTUAL_HID_ROOT_USERCLIENT_CLASS* target,
+                                                                  void* reference,
+                                                                  IOExternalMethodArguments* arguments);
+  IOReturn setGlobalKeyboardRepeatPropertiesCallback(const pqrs::karabiner_virtual_hid_device::properties::keyboard_repeat& properties);
 
   // ----------------------------------------
   static bool isTargetHIDInterface(IOService* newService, IOService* refCon);
@@ -107,4 +107,5 @@ private:
   VIRTUAL_HID_KEYBOARD_CLASS* virtualHIDKeyboard_;
   VIRTUAL_HID_POINTING_CLASS* virtualHIDPointing_;
   VIRTUAL_HID_EVENT_SERVICE_CLASS* virtualHIDEventService_;
+  pqrs::karabiner_virtual_hid_device::properties::keyboard_type virtualHIDKeyboardType_;
 };
