@@ -49,3 +49,8 @@ Execute the following instructions in Terminal.
 2. `cd example/virtual_pointing_example`
 3. `make`
 4. `make run`
+
+## Acknowledgments
+
+* Karabiner-VirtualHIDDevice uses the Vendor ID and Product ID from Objective Development.
+  https://github.com/obdev/v-usb/blob/master/usbdrv/USB-IDs-for-free.txt
