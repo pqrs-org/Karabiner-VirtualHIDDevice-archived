@@ -76,6 +76,20 @@ uint8_t reportDescriptor_[] = {
     0x75, 0x08,       //   Report Size............. (8)
     0x81, 0x00,       //   Input...................(Data, Array, Absolute)
     0xc0,             // End Collection
+                      //
+    0x06, 0x00, 0xff, // Usage Page (kHIDPage_AppleVendor)
+    0x09, 0x06,       // Usage 6 (kHIDUsage_AppleVendor_Keyboard)
+    0xa1, 0x01,       // Collection (Application)
+    0x85, 0x03,       //   Report Id (3)
+    0x06, 0x01, 0xff, //   Usage Page (kHIDPage_AppleVendorKeyboard)
+    0x95, 0x06,       //   Report Count............ (6)
+    0x75, 0x08,       //   Report Size............. (8)
+    0x15, 0x00,       //   Logical Minimum......... (0)
+    0x26, 0xff, 0x00, //   Logical Maximum......... (255)
+    0x19, 0x00,       //   Usage Minimum........... (0)
+    0x29, 0xff,       //   Usage Maximum........... (255)
+    0x81, 0x00,       //   Input...................(Data, Array, Absolute)
+    0xc0,             // End Collection
 };
 }
 
