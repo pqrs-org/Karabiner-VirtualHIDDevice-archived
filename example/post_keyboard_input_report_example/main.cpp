@@ -72,6 +72,18 @@ int main(int argc, const char* argv[]) {
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }
 
+  {
+    pqrs::karabiner_virtual_hid_device::hid_report::keyboard_input report;
+    report.report_id = 2;
+    report.modifiers = 0;
+    report.keys[0] = kHIDUsage_Csmr_Mute;
+
+    kr = pqrs::karabiner_virtual_hid_device_methods::post_keyboard_input_report(connect, report);
+    if (kr != KERN_SUCCESS) {
+      std::cerr << "post_keyboard_input_report error" << std::endl;
+    }
+  }
+
   kr = pqrs::karabiner_virtual_hid_device_methods::reset_virtual_hid_keyboard(connect);
   if (kr != KERN_SUCCESS) {
     std::cerr << "reset_virtual_hid_keyboard error" << std::endl;
