@@ -39,9 +39,18 @@ public:
                                      nullptr, 0);
   }
 
-  static IOReturn post_keyboard_input_report(mach_port_t connection, const karabiner_virtual_hid_device::hid_report::keyboard_input& report) {
+  static IOReturn post_keyboard_input_report(mach_port_t connection,
+                                             const karabiner_virtual_hid_device::hid_report::keyboard_input& report) {
     return IOConnectCallStructMethod(connection,
                                      static_cast<uint32_t>(karabiner_virtual_hid_device::user_client_method::post_keyboard_input_report),
+                                     &report, sizeof(report),
+                                     nullptr, 0);
+  }
+
+  static IOReturn post_apple_vendor_keyboard_input_report(mach_port_t connection,
+                                                          const karabiner_virtual_hid_device::hid_report::apple_vendor_keyboard_input& report) {
+    return IOConnectCallStructMethod(connection,
+                                     static_cast<uint32_t>(karabiner_virtual_hid_device::user_client_method::post_apple_vendor_keyboard_input_report),
                                      &report, sizeof(report),
                                      nullptr, 0);
   }
