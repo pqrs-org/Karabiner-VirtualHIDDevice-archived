@@ -94,12 +94,28 @@ IOExternalMethodDispatch VIRTUAL_HID_ROOT_USERCLIENT_CLASS::methods_[static_cast
         0                                                                                 // No struct output value.
     },
     {
+        // post_consumer_input_report
+        reinterpret_cast<IOExternalMethodAction>(&staticPostKeyboardInputReportCallback), // Method pointer.
+        0,                                                                                // No scalar input value.
+        sizeof(pqrs::karabiner_virtual_hid_device::hid_report::consumer_input),           // One struct input value.
+        0,                                                                                // No scalar output value.
+        0                                                                                 // No struct output value.
+    },
+    {
+        // post_apple_vendor_top_case_input_report
+        reinterpret_cast<IOExternalMethodAction>(&staticPostKeyboardInputReportCallback),    // Method pointer.
+        0,                                                                                   // No scalar input value.
+        sizeof(pqrs::karabiner_virtual_hid_device::hid_report::apple_vendor_top_case_input), // One struct input value.
+        0,                                                                                   // No scalar output value.
+        0                                                                                    // No struct output value.
+    },
+    {
         // post_apple_vendor_keyboard_input_report
-        reinterpret_cast<IOExternalMethodAction>(&staticPostAppleVendorKeyboardInputReportCallback), // Method pointer.
-        0,                                                                                           // No scalar input value.
-        sizeof(pqrs::karabiner_virtual_hid_device::hid_report::apple_vendor_keyboard_input),         // One struct input value.
-        0,                                                                                           // No scalar output value.
-        0                                                                                            // No struct output value.
+        reinterpret_cast<IOExternalMethodAction>(&staticPostKeyboardInputReportCallback),    // Method pointer.
+        0,                                                                                   // No scalar input value.
+        sizeof(pqrs::karabiner_virtual_hid_device::hid_report::apple_vendor_keyboard_input), // One struct input value.
+        0,                                                                                   // No scalar output value.
+        0                                                                                    // No struct output value.
     },
     {
         // clear_keyboard_modifier_flags
@@ -184,18 +200,9 @@ IOReturn VIRTUAL_HID_ROOT_USERCLIENT_CLASS::clientClose(void) {
   IOLog(VIRTUAL_HID_ROOT_USERCLIENT_CLASS_STRING "::clientClose\n");
 
   // clear input events.
-  {
-    pqrs::karabiner_virtual_hid_device::hid_report::keyboard_input report;
-    postKeyboardInputReportCallback(report);
-  }
-  {
-    pqrs::karabiner_virtual_hid_device::hid_report::apple_vendor_keyboard_input report;
-    postAppleVendorKeyboardInputReportCallback(report);
-  }
-  {
-    pqrs::karabiner_virtual_hid_device::hid_report::pointing_input report;
-    postPointingInputReportCallback(report);
-  }
+
+  resetVirtualHIDKeyboard();
+  resetVirtualHIDPointing();
 
   terminateVirtualHIDEventService();
   TERMINATE_VIRTUAL_DEVICE(virtualHIDKeyboard_);
@@ -323,48 +330,18 @@ IOReturn VIRTUAL_HID_ROOT_USERCLIENT_CLASS::staticPostKeyboardInputReportCallbac
     return kIOReturnBadArgument;
   }
 
-  if (auto input = static_cast<const pqrs::karabiner_virtual_hid_device::hid_report::keyboard_input*>(arguments->structureInput)) {
-    return target->postKeyboardInputReportCallback(*input);
-  }
-
-  return kIOReturnBadArgument;
+  return target->postKeyboardInputReportCallback(arguments->structureInput, arguments->structureInputSize);
 }
 
-IOReturn VIRTUAL_HID_ROOT_USERCLIENT_CLASS::postKeyboardInputReportCallback(const pqrs::karabiner_virtual_hid_device::hid_report::keyboard_input& input) {
+IOReturn VIRTUAL_HID_ROOT_USERCLIENT_CLASS::postKeyboardInputReportCallback(const void* structureInput, uint32_t structureInputSize) const {
   IOReturn result = kIOReturnError;
 
-  if (virtualHIDKeyboard_) {
-    if (auto report = IOBufferMemoryDescriptor::withBytes(&input, sizeof(input), kIODirectionNone)) {
-      result = virtualHIDKeyboard_->handleReport(report, kIOHIDReportTypeInput, kIOHIDOptionsTypeNone);
-      report->release();
-    }
-  }
-
-  return result;
-}
-
-IOReturn VIRTUAL_HID_ROOT_USERCLIENT_CLASS::staticPostAppleVendorKeyboardInputReportCallback(VIRTUAL_HID_ROOT_USERCLIENT_CLASS* target,
-                                                                                             void* reference,
-                                                                                             IOExternalMethodArguments* arguments) {
-  if (!target) {
-    return kIOReturnBadArgument;
-  }
-  if (!arguments) {
+  if (!structureInput) {
     return kIOReturnBadArgument;
   }
 
-  if (auto input = static_cast<const pqrs::karabiner_virtual_hid_device::hid_report::apple_vendor_keyboard_input*>(arguments->structureInput)) {
-    return target->postAppleVendorKeyboardInputReportCallback(*input);
-  }
-
-  return kIOReturnBadArgument;
-}
-
-IOReturn VIRTUAL_HID_ROOT_USERCLIENT_CLASS::postAppleVendorKeyboardInputReportCallback(const pqrs::karabiner_virtual_hid_device::hid_report::apple_vendor_keyboard_input& input) {
-  IOReturn result = kIOReturnError;
-
   if (virtualHIDKeyboard_) {
-    if (auto report = IOBufferMemoryDescriptor::withBytes(&input, sizeof(input), kIODirectionNone)) {
+    if (auto report = IOBufferMemoryDescriptor::withBytes(structureInput, structureInputSize, kIODirectionNone)) {
       result = virtualHIDKeyboard_->handleReport(report, kIOHIDReportTypeInput, kIOHIDOptionsTypeNone);
       report->release();
     }
@@ -392,7 +369,7 @@ IOReturn VIRTUAL_HID_ROOT_USERCLIENT_CLASS::staticPostPointingInputReportCallbac
   return kIOReturnBadArgument;
 }
 
-IOReturn VIRTUAL_HID_ROOT_USERCLIENT_CLASS::postPointingInputReportCallback(const pqrs::karabiner_virtual_hid_device::hid_report::pointing_input& input) {
+IOReturn VIRTUAL_HID_ROOT_USERCLIENT_CLASS::postPointingInputReportCallback(const pqrs::karabiner_virtual_hid_device::hid_report::pointing_input& input) const {
   IOReturn result = kIOReturnError;
 
   if (virtualHIDPointing_) {
@@ -429,14 +406,7 @@ IOReturn VIRTUAL_HID_ROOT_USERCLIENT_CLASS::resetVirtualHIDKeyboardCallback(void
     virtualHIDEventService_->dispatchKeyUpAllPressedKeys();
   }
 
-  // reset for post_keyboard_input_report
-  {
-    pqrs::karabiner_virtual_hid_device::hid_report::keyboard_input report;
-    auto kr = postKeyboardInputReportCallback(report);
-    if (kr != kIOReturnSuccess) {
-      result = kIOReturnError;
-    }
-  }
+  result = resetVirtualHIDKeyboard();
 
   return result;
 }
@@ -458,8 +428,7 @@ IOReturn VIRTUAL_HID_ROOT_USERCLIENT_CLASS::resetVirtualHIDPointingCallback(void
     return kIOReturnSuccess;
   }
 
-  pqrs::karabiner_virtual_hid_device::hid_report::pointing_input report;
-  return postPointingInputReportCallback(report);
+  return resetVirtualHIDPointing();
 }
 
 #pragma mark - is_virtual_hid_keyboard_ready
