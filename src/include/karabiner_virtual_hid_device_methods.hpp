@@ -32,13 +32,6 @@ public:
                                      &ready, &output_struct_count);
   }
 
-  static IOReturn dispatch_keyboard_event(mach_port_t connection, const karabiner_virtual_hid_device::hid_event_service::keyboard_event& keyboard_event) {
-    return IOConnectCallStructMethod(connection,
-                                     static_cast<uint32_t>(karabiner_virtual_hid_device::user_client_method::dispatch_keyboard_event),
-                                     &keyboard_event, sizeof(keyboard_event),
-                                     nullptr, 0);
-  }
-
   static IOReturn post_keyboard_input_report(mach_port_t connection,
                                              const karabiner_virtual_hid_device::hid_report::keyboard_input& report) {
     return IOConnectCallStructMethod(connection,
@@ -68,13 +61,6 @@ public:
     return IOConnectCallStructMethod(connection,
                                      static_cast<uint32_t>(karabiner_virtual_hid_device::user_client_method::post_apple_vendor_keyboard_input_report),
                                      &report, sizeof(report),
-                                     nullptr, 0);
-  }
-
-  static IOReturn clear_keyboard_modifier_flags(mach_port_t connection) {
-    return IOConnectCallStructMethod(connection,
-                                     static_cast<uint32_t>(karabiner_virtual_hid_device::user_client_method::clear_keyboard_modifier_flags),
-                                     nullptr, 0,
                                      nullptr, 0);
   }
 

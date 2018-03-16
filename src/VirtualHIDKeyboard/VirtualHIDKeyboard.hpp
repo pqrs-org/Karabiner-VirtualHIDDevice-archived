@@ -2,6 +2,7 @@
 
 #include "DiagnosticMacros.hpp"
 #include "VersionSignature.hpp"
+#include "karabiner_virtual_hid_device.hpp"
 
 BEGIN_IOKIT_INCLUDE;
 #include <IOKit/hid/IOHIDDevice.h>
@@ -54,4 +55,8 @@ public:
   // ----------------------------------------
 
   virtual IOReturn newReportDescriptor(IOMemoryDescriptor** descriptor) const override;
+
+  // ----------------------------------------
+
+  static void setCapsLockDelayMilliseconds(pqrs::karabiner_virtual_hid_device::milliseconds value);
 };

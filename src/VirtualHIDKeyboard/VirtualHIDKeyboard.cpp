@@ -74,17 +74,22 @@ const uint8_t reportDescriptor_[] = {
     0x81, 0x00,       //   Input...................(Data, Array, Absolute)
     0xc0,             // End Collection
 };
-}
+
+pqrs::karabiner_virtual_hid_device::milliseconds capsLockDelayMilliseconds_ = pqrs::karabiner_virtual_hid_device::milliseconds(0);
+} // namespace
 
 bool VIRTUAL_HID_KEYBOARD_CLASS::handleStart(IOService* provider) {
   if (!super::handleStart(provider)) {
     return false;
   }
 
-  // We have to set kIOHIDVirtualHIDevice to suppress Keyboard Setup Assistant.
-  setProperty(kIOHIDVirtualHIDevice, kOSBooleanTrue);
   setProperty("HIDDefaultBehavior", kOSBooleanTrue);
   setProperty("AppleVendorSupported", kOSBooleanTrue);
+
+  if (auto number = OSNumber::withNumber(static_cast<uint64_t>(capsLockDelayMilliseconds_), 64)) {
+    setProperty(kIOHIDKeyboardCapsLockDelay, number);
+    number->release();
+  }
 
   return true;
 }
@@ -92,4 +97,8 @@ bool VIRTUAL_HID_KEYBOARD_CLASS::handleStart(IOService* provider) {
 IOReturn VIRTUAL_HID_KEYBOARD_CLASS::newReportDescriptor(IOMemoryDescriptor** descriptor) const {
   *descriptor = IOBufferMemoryDescriptor::withBytes(reportDescriptor_, sizeof(reportDescriptor_), kIODirectionNone);
   return kIOReturnSuccess;
+}
+
+void VIRTUAL_HID_KEYBOARD_CLASS::setCapsLockDelayMilliseconds(pqrs::karabiner_virtual_hid_device::milliseconds value) {
+  capsLockDelayMilliseconds_ = value;
 }
