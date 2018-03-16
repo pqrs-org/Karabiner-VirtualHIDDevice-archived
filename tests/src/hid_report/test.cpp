@@ -117,3 +117,28 @@ TEST_CASE("keys") {
     REQUIRE(keys.count() == 6);
   }
 }
+
+TEST_CASE("buttons") {
+  {
+    pqrs::karabiner_virtual_hid_device::hid_report::buttons buttons;
+    REQUIRE(buttons.get_raw_value() == 0);
+
+    buttons.insert(1);
+    REQUIRE(buttons.get_raw_value() == 0x1);
+
+    buttons.insert(32);
+    REQUIRE(buttons.get_raw_value() == 0x80000001);
+
+    buttons.insert(0);
+    REQUIRE(buttons.get_raw_value() == 0x80000001);
+
+    buttons.insert(33);
+    REQUIRE(buttons.get_raw_value() == 0x80000001);
+
+    buttons.erase(1);
+    REQUIRE(buttons.get_raw_value() == 0x80000000);
+
+    buttons.clear();
+    REQUIRE(buttons.get_raw_value() == 0);
+  }
+}
