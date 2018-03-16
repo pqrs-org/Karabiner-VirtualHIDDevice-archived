@@ -6,64 +6,64 @@
 TEST_CASE("modifiers") {
   {
     pqrs::karabiner_virtual_hid_device::hid_report::modifiers modifiers;
-    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifiers::modifier::left_control));
-    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifiers::modifier::left_shift));
-    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifiers::modifier::left_option));
-    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifiers::modifier::left_command));
-    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifiers::modifier::right_control));
-    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifiers::modifier::right_shift));
-    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifiers::modifier::right_option));
-    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifiers::modifier::right_command));
+    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::left_control));
+    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::left_shift));
+    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::left_option));
+    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::left_command));
+    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::right_control));
+    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::right_shift));
+    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::right_option));
+    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::right_command));
 
-    modifiers.add_modifier(pqrs::karabiner_virtual_hid_device::hid_report::modifiers::modifier::left_control);
-    REQUIRE(modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifiers::modifier::left_control));
-    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifiers::modifier::left_shift));
-    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifiers::modifier::left_option));
-    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifiers::modifier::left_command));
-    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifiers::modifier::right_control));
-    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifiers::modifier::right_shift));
-    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifiers::modifier::right_option));
-    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifiers::modifier::right_command));
+    modifiers.insert(pqrs::karabiner_virtual_hid_device::hid_report::modifier::left_control);
+    REQUIRE(modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::left_control));
+    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::left_shift));
+    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::left_option));
+    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::left_command));
+    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::right_control));
+    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::right_shift));
+    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::right_option));
+    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::right_command));
 
-    modifiers.add_modifier(pqrs::karabiner_virtual_hid_device::hid_report::modifiers::modifier::right_control);
-    REQUIRE(modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifiers::modifier::left_control));
-    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifiers::modifier::left_shift));
-    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifiers::modifier::left_option));
-    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifiers::modifier::left_command));
-    REQUIRE(modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifiers::modifier::right_control));
-    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifiers::modifier::right_shift));
-    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifiers::modifier::right_option));
-    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifiers::modifier::right_command));
+    modifiers.insert(pqrs::karabiner_virtual_hid_device::hid_report::modifier::right_control);
+    REQUIRE(modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::left_control));
+    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::left_shift));
+    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::left_option));
+    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::left_command));
+    REQUIRE(modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::right_control));
+    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::right_shift));
+    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::right_option));
+    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::right_command));
 
-    modifiers.erase_modifier(pqrs::karabiner_virtual_hid_device::hid_report::modifiers::modifier::left_shift);
-    REQUIRE(modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifiers::modifier::left_control));
-    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifiers::modifier::left_shift));
-    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifiers::modifier::left_option));
-    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifiers::modifier::left_command));
-    REQUIRE(modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifiers::modifier::right_control));
-    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifiers::modifier::right_shift));
-    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifiers::modifier::right_option));
-    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifiers::modifier::right_command));
+    modifiers.erase(pqrs::karabiner_virtual_hid_device::hid_report::modifier::left_shift);
+    REQUIRE(modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::left_control));
+    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::left_shift));
+    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::left_option));
+    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::left_command));
+    REQUIRE(modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::right_control));
+    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::right_shift));
+    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::right_option));
+    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::right_command));
 
-    modifiers.erase_modifier(pqrs::karabiner_virtual_hid_device::hid_report::modifiers::modifier::left_control);
-    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifiers::modifier::left_control));
-    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifiers::modifier::left_shift));
-    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifiers::modifier::left_option));
-    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifiers::modifier::left_command));
-    REQUIRE(modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifiers::modifier::right_control));
-    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifiers::modifier::right_shift));
-    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifiers::modifier::right_option));
-    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifiers::modifier::right_command));
+    modifiers.erase(pqrs::karabiner_virtual_hid_device::hid_report::modifier::left_control);
+    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::left_control));
+    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::left_shift));
+    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::left_option));
+    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::left_command));
+    REQUIRE(modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::right_control));
+    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::right_shift));
+    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::right_option));
+    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::right_command));
 
     modifiers.clear();
-    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifiers::modifier::left_control));
-    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifiers::modifier::left_shift));
-    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifiers::modifier::left_option));
-    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifiers::modifier::left_command));
-    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifiers::modifier::right_control));
-    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifiers::modifier::right_shift));
-    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifiers::modifier::right_option));
-    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifiers::modifier::right_command));
+    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::left_control));
+    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::left_shift));
+    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::left_option));
+    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::left_command));
+    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::right_control));
+    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::right_shift));
+    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::right_option));
+    REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::right_command));
   }
 }
 
@@ -72,28 +72,48 @@ TEST_CASE("keys") {
     pqrs::karabiner_virtual_hid_device::hid_report::keys keys;
     REQUIRE(keys.count() == 0);
 
-    keys.add_key(10);
+    keys.insert(10);
+    REQUIRE(keys.count() == 1);
+    REQUIRE(keys.exists(10));
+    REQUIRE(!keys.exists(20));
+
+    keys.insert(10);
     REQUIRE(keys.count() == 1);
 
-    keys.add_key(10);
+    keys.erase(20);
     REQUIRE(keys.count() == 1);
 
-    keys.erase_key(20);
-    REQUIRE(keys.count() == 1);
-
-    keys.erase_key(10);
+    keys.erase(10);
     REQUIRE(keys.count() == 0);
 
-    keys.erase_key(10);
+    keys.erase(10);
     REQUIRE(keys.count() == 0);
 
-    keys.add_key(10);
+    keys.insert(10);
     REQUIRE(keys.count() == 1);
 
-    keys.add_key(20);
+    keys.insert(20);
     REQUIRE(keys.count() == 2);
 
     keys.clear();
     REQUIRE(keys.count() == 0);
+  }
+
+  {
+    // Overflow
+
+    pqrs::karabiner_virtual_hid_device::hid_report::keys keys;
+    REQUIRE(keys.count() == 0);
+
+    for (int i = 0; i < 6; ++i) {
+      keys.insert(i + 1);
+      REQUIRE(keys.count() == (i + 1));
+    }
+
+    keys.insert(10);
+    REQUIRE(keys.count() == 6);
+
+    keys.insert(20);
+    REQUIRE(keys.count() == 6);
   }
 }

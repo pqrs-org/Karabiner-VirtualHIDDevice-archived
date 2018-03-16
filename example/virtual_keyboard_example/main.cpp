@@ -79,19 +79,19 @@ int main(int argc, const char* argv[]) {
     pqrs::karabiner_virtual_hid_device::hid_report::keyboard_input report;
     switch (i % 6) {
     case 0:
-      report.keys[0] = kHIDUsage_KeyboardA;
+      report.keys.insert(kHIDUsage_KeyboardA);
       break;
     case 1:
-      report.keys[0] = kHIDUsage_KeyboardB;
+      report.keys.insert(kHIDUsage_KeyboardB);
       break;
     case 2:
-      report.keys[0] = kHIDUsage_KeyboardC;
+      report.keys.insert(kHIDUsage_KeyboardC);
       break;
     case 3:
-      report.keys[0] = kHIDUsage_KeyboardD;
+      report.keys.insert(kHIDUsage_KeyboardD);
       break;
     case 4:
-      report.keys[0] = kHIDUsage_KeyboardE;
+      report.keys.insert(kHIDUsage_KeyboardE);
       break;
     case 5:
       // Send empty report
@@ -110,7 +110,7 @@ int main(int argc, const char* argv[]) {
 
   {
     pqrs::karabiner_virtual_hid_device::hid_report::keyboard_input report;
-    report.modifiers = pqrs::karabiner_virtual_hid_device::hid_report::keyboard_input::modifier::left_option;
+    report.modifiers.insert(pqrs::karabiner_virtual_hid_device::hid_report::modifier::left_option);
 
     kr = pqrs::karabiner_virtual_hid_device_methods::post_keyboard_input_report(connect, report);
     if (kr != KERN_SUCCESS) {
@@ -119,7 +119,7 @@ int main(int argc, const char* argv[]) {
   }
   {
     pqrs::karabiner_virtual_hid_device::hid_report::consumer_input report;
-    report.keys[0] = kHIDUsage_Csmr_Mute;
+    report.keys.insert(kHIDUsage_Csmr_Mute);
 
     kr = pqrs::karabiner_virtual_hid_device_methods::post_keyboard_input_report(connect, report);
     if (kr != KERN_SUCCESS) {
@@ -133,7 +133,7 @@ int main(int argc, const char* argv[]) {
 
   {
     pqrs::karabiner_virtual_hid_device::hid_report::apple_vendor_top_case_input report;
-    report.keys[0] = 0x0003; // kHIDUsage_AV_TopCase_KeyboardFn
+    report.keys.insert(0x03); // kHIDUsage_AV_TopCase_KeyboardFn
 
     kr = pqrs::karabiner_virtual_hid_device_methods::post_keyboard_input_report(connect, report);
     if (kr != KERN_SUCCESS) {
@@ -142,7 +142,7 @@ int main(int argc, const char* argv[]) {
   }
   {
     pqrs::karabiner_virtual_hid_device::hid_report::keyboard_input report;
-    report.keys[0] = kHIDUsage_KeyboardSpacebar;
+    report.keys.insert(kHIDUsage_KeyboardSpacebar);
 
     kr = pqrs::karabiner_virtual_hid_device_methods::post_keyboard_input_report(connect, report);
     if (kr != KERN_SUCCESS) {
@@ -156,7 +156,7 @@ int main(int argc, const char* argv[]) {
 
   {
     pqrs::karabiner_virtual_hid_device::hid_report::keyboard_input report;
-    report.modifiers = pqrs::karabiner_virtual_hid_device::hid_report::keyboard_input::modifier::left_command;
+    report.modifiers.insert(pqrs::karabiner_virtual_hid_device::hid_report::modifier::left_command);
 
     kr = pqrs::karabiner_virtual_hid_device_methods::post_keyboard_input_report(connect, report);
     if (kr != KERN_SUCCESS) {
@@ -166,7 +166,7 @@ int main(int argc, const char* argv[]) {
 
   {
     pqrs::karabiner_virtual_hid_device::hid_report::apple_vendor_keyboard_input report;
-    report.keys[0] = 0x0010; // kHIDUsage_AppleVendorKeyboard_Expose_All
+    report.keys.insert(0x0010); // kHIDUsage_AppleVendorKeyboard_Expose_All
 
     kr = pqrs::karabiner_virtual_hid_device_methods::post_keyboard_input_report(connect, report);
     if (kr != KERN_SUCCESS) {
