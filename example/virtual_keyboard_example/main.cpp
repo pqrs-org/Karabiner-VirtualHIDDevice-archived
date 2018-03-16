@@ -36,11 +36,6 @@ int main(int argc, const char* argv[]) {
   {
     pqrs::karabiner_virtual_hid_device::properties::keyboard_initialization properties;
 #if 0
-    properties.keyboard_type = pqrs::karabiner_virtual_hid_device::properties::keyboard_type::jis;
-#else
-    properties.keyboard_type = pqrs::karabiner_virtual_hid_device::properties::keyboard_type::ansi;
-#endif
-#if 0
     properties.caps_lock_delay_milliseconds = pqrs::karabiner_virtual_hid_device::milliseconds(300);
 #endif
     kr = pqrs::karabiner_virtual_hid_device_methods::initialize_virtual_hid_keyboard(connect, properties);
@@ -70,7 +65,9 @@ int main(int argc, const char* argv[]) {
 
   {
     pqrs::karabiner_virtual_hid_device::properties::keyboard_initialization properties;
-    properties.keyboard_type = pqrs::karabiner_virtual_hid_device::properties::keyboard_type::ansi;
+#if 0
+    properties.country_code = 33;
+#endif
     kr = pqrs::karabiner_virtual_hid_device_methods::initialize_virtual_hid_keyboard(connect, properties);
     if (kr != KERN_SUCCESS) {
       std::cerr << "initialize_virtual_hid_keyboard error" << std::endl;
@@ -124,9 +121,9 @@ int main(int argc, const char* argv[]) {
     pqrs::karabiner_virtual_hid_device::hid_report::consumer_input report;
     report.keys[0] = kHIDUsage_Csmr_Mute;
 
-    kr = pqrs::karabiner_virtual_hid_device_methods::post_consumer_input_report(connect, report);
+    kr = pqrs::karabiner_virtual_hid_device_methods::post_keyboard_input_report(connect, report);
     if (kr != KERN_SUCCESS) {
-      std::cerr << "post_consumer_input_report error" << std::endl;
+      std::cerr << "post_keyboard_input_report error" << std::endl;
     }
   }
 
@@ -138,9 +135,9 @@ int main(int argc, const char* argv[]) {
     pqrs::karabiner_virtual_hid_device::hid_report::apple_vendor_top_case_input report;
     report.keys[0] = 0x0003; // kHIDUsage_AV_TopCase_KeyboardFn
 
-    kr = pqrs::karabiner_virtual_hid_device_methods::post_apple_vendor_top_case_input_report(connect, report);
+    kr = pqrs::karabiner_virtual_hid_device_methods::post_keyboard_input_report(connect, report);
     if (kr != KERN_SUCCESS) {
-      std::cerr << "post_apple_vendor_top_case_input_report error" << std::endl;
+      std::cerr << "post_keyboard_input_report error" << std::endl;
     }
   }
   {
@@ -171,7 +168,7 @@ int main(int argc, const char* argv[]) {
     pqrs::karabiner_virtual_hid_device::hid_report::apple_vendor_keyboard_input report;
     report.keys[0] = 0x0010; // kHIDUsage_AppleVendorKeyboard_Expose_All
 
-    kr = pqrs::karabiner_virtual_hid_device_methods::post_apple_vendor_keyboard_input_report(connect, report);
+    kr = pqrs::karabiner_virtual_hid_device_methods::post_keyboard_input_report(connect, report);
     if (kr != KERN_SUCCESS) {
       std::cerr << "post_keyboard_input_report error" << std::endl;
     }
@@ -182,9 +179,10 @@ int main(int argc, const char* argv[]) {
     std::cerr << "reset_virtual_hid_keyboard error" << std::endl;
   }
 
+  std::cout << std::endl;
   std::cout << "press control-c to quit" << std::endl;
   while (true) {
-    std::cout << ".";
+    std::cout << "." << std::flush;
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
   }
 
