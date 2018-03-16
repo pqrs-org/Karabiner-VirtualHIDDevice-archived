@@ -42,6 +42,8 @@ public:
     return OSNumber::withNumber(static_cast<uint32_t>(0), 32);
   }
 
+  virtual OSNumber* newCountryCodeNumber() const override;
+
   // ----------------------------------------
 
   virtual OSNumber* newPrimaryUsagePageNumber() const override {
@@ -59,4 +61,5 @@ public:
   // ----------------------------------------
 
   static void setCapsLockDelayMilliseconds(pqrs::karabiner_virtual_hid_device::milliseconds value);
+  static void setCountryCode(uint8_t value);
 };
