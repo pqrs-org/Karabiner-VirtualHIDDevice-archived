@@ -32,14 +32,6 @@ public:
     right_option = kHIDUsage_KeyboardRightAlt,
     right_command = kHIDUsage_KeyboardRightGUI,
 
-    av_top_case_keyboard_fn = 0x03,
-    av_top_case_brightness_up = 0x04,
-    av_top_case_brightness_down = 0x05,
-    av_top_case_video_mirror = 0x06,
-    av_top_case_illumination_toggle = 0x07,
-    av_top_case_illumination_up = 0x08,
-    av_top_case_illumination_down = 0x09,
-
     csmr_power = 0x30,
     csmr_display_brightness_increment = 0x6f,
     csmr_display_brightness_decrement = 0x70,
@@ -54,6 +46,14 @@ public:
     csmr_volume_decrement = 0xea,
 
     // from AppleHIDUsageTables.h
+    apple_vendor_top_case_keyboard_fn = 0x03,
+    apple_vendor_top_case_brightness_up = 0x04,
+    apple_vendor_top_case_brightness_down = 0x05,
+    apple_vendor_top_case_video_mirror = 0x06,
+    apple_vendor_top_case_illumination_toggle = 0x07,
+    apple_vendor_top_case_illumination_up = 0x08,
+    apple_vendor_top_case_illumination_down = 0x09,
+
     apple_vendor_keyboard_spotlight = 0x01,
     apple_vendor_keyboard_dashboard = 0x02,
     apple_vendor_keyboard_launchpad = 0x04,
@@ -97,10 +97,13 @@ public:
 
     private:
       uint8_t report_id_ __attribute__((unused));
+
     public:
       uint8_t modifiers;
+
     private:
       uint8_t reserved __attribute__((unused));
+
     public:
       uint8_t keys[6];
     };
@@ -113,6 +116,7 @@ public:
 
     private:
       uint8_t report_id_ __attribute__((unused));
+
     public:
       uint8_t keys[6];
     };
@@ -125,6 +129,7 @@ public:
 
     private:
       uint8_t report_id_ __attribute__((unused));
+
     public:
       uint8_t keys[6];
     };
@@ -137,6 +142,7 @@ public:
 
     private:
       uint8_t report_id_ __attribute__((unused));
+
     public:
       uint8_t keys[6];
     };
@@ -167,25 +173,18 @@ public:
 
   class properties final {
   public:
-    enum class keyboard_type : uint32_t {
-      none = 0,
-      ansi = 40,
-      iso = 41,
-      jis = 42,
-    };
-
     class __attribute__((packed)) keyboard_initialization final {
     public:
-      keyboard_initialization(void) : keyboard_type(keyboard_type::none),
+      keyboard_initialization(void) : country_code(0),
                                       caps_lock_delay_milliseconds(milliseconds(0)) {}
 
       bool operator==(const keyboard_initialization& other) const {
-        return keyboard_type == other.keyboard_type &&
+        return country_code == other.country_code &&
                caps_lock_delay_milliseconds == other.caps_lock_delay_milliseconds;
       }
       bool operator!=(const keyboard_initialization& other) const { return !(*this == other); }
 
-      keyboard_type keyboard_type;
+      uint8_t country_code;
       milliseconds caps_lock_delay_milliseconds;
     };
   };
@@ -211,11 +210,11 @@ public:
   };
 
   static const char* get_virtual_hid_root_name(void) {
-    return "org_pqrs_driver_Karabiner_VirtualHIDDevice_VirtualHIDRoot_v050006";
+    return "org_pqrs_driver_Karabiner_VirtualHIDDevice_VirtualHIDRoot_v060000";
   }
 
   static const char* get_kernel_extension_name(void) {
-    return "org.pqrs.driver.Karabiner.VirtualHIDDevice.v050006.kext";
+    return "org.pqrs.driver.Karabiner.VirtualHIDDevice.v060000.kext";
   }
 };
 } // namespace pqrs
