@@ -1,3 +1,8 @@
+# Version 6.1.0
+
+* `pqrs::karabiner_virtual_hid_device::hid_report` interfaces have been improved.
+
+
 # Version 6.0.0
 
 * macOS 10.11 support has been dropped.
