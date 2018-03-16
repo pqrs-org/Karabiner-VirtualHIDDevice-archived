@@ -4,7 +4,7 @@
 OSDefineMetaClassAndStructors(VIRTUAL_HID_KEYBOARD_CLASS, super);
 
 namespace {
-uint8_t reportDescriptor_[] = {
+const uint8_t reportDescriptor_[] = {
     0x05, 0x01,       // Usage Page (Generic Desktop)
     0x09, 0x06,       // Usage (Keyboard)
     0xa1, 0x01,       // Collection (Application)
@@ -89,39 +89,7 @@ bool VIRTUAL_HID_KEYBOARD_CLASS::handleStart(IOService* provider) {
   return true;
 }
 
-OSString* VIRTUAL_HID_KEYBOARD_CLASS::newManufacturerString() const {
-  return OSString::withCString("pqrs.org");
-}
-
-OSString* VIRTUAL_HID_KEYBOARD_CLASS::newProductString() const {
-  return OSString::withCString("Karabiner VirtualHIDKeyboard");
-}
-
-OSNumber* VIRTUAL_HID_KEYBOARD_CLASS::newVendorIDNumber() const {
-  return OSNumber::withNumber(static_cast<uint32_t>(0x16c0), 32);
-}
-
-OSNumber* VIRTUAL_HID_KEYBOARD_CLASS::newProductIDNumber() const {
-  return OSNumber::withNumber(static_cast<uint32_t>(0x27db), 32);
-}
-
-OSNumber* VIRTUAL_HID_KEYBOARD_CLASS::newPrimaryUsageNumber() const {
-  return OSNumber::withNumber(static_cast<uint32_t>(kHIDUsage_GD_Keyboard), 32);
-}
-
-OSNumber* VIRTUAL_HID_KEYBOARD_CLASS::newPrimaryUsagePageNumber() const {
-  return OSNumber::withNumber(static_cast<uint32_t>(kHIDPage_GenericDesktop), 32);
-}
-
 IOReturn VIRTUAL_HID_KEYBOARD_CLASS::newReportDescriptor(IOMemoryDescriptor** descriptor) const {
   *descriptor = IOBufferMemoryDescriptor::withBytes(reportDescriptor_, sizeof(reportDescriptor_), kIODirectionNone);
   return kIOReturnSuccess;
-}
-
-OSString* VIRTUAL_HID_KEYBOARD_CLASS::newSerialNumberString() const {
-  return OSString::withCString(serialNumberCString());
-}
-
-OSNumber* VIRTUAL_HID_KEYBOARD_CLASS::newLocationIDNumber() const {
-  return OSNumber::withNumber(static_cast<uint32_t>(0), 32);
 }
