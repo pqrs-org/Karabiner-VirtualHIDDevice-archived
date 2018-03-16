@@ -7,16 +7,15 @@ Karabiner-VirtualHIDDevice is a virtual HID device driver for macOS.
 
 ## System requirements
 
-* OS X 10.11.*
-* OS X 10.12.*
-* OS X 10.13.*
+* macOS 10.12.*
+* macOS 10.13.*
 
 ## How to build
 
 System requirements:
 
-* OS X 10.11+
-* Xcode 8+
+* macOS 10.13+
+* Xcode 9+
 * Command Line Tools for Xcode
 
 ### Step 1: Getting source code
