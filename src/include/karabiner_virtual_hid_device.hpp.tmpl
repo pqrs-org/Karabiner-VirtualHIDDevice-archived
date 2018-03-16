@@ -75,6 +75,41 @@ public:
 
   class hid_report final {
   public:
+    class __attribute__((packed)) modifiers final {
+    public:
+      enum class modifier : uint8_t {
+        left_control = 0x1 << 0,
+        left_shift = 0x1 << 1,
+        left_option = 0x1 << 2,
+        left_command = 0x1 << 3,
+        right_control = 0x1 << 4,
+        right_shift = 0x1 << 5,
+        right_option = 0x1 << 6,
+        right_command = 0x1 << 7,
+      };
+
+      modifiers(void) : modifiers_(0) {}
+
+      void clear(void) {
+        modifiers_ = 0;
+      }
+
+      void add_modifier(modifier value) {
+        modifiers_ |= static_cast<uint8_t>(value);
+      }
+
+      void erase_modifier(modifier value) {
+        modifiers_ &= ~(static_cast<uint8_t>(value));
+      }
+
+      bool exists(modifier value) {
+        return modifiers_ & static_cast<uint8_t>(value);
+      }
+
+    private:
+      uint8_t modifiers_;
+    };
+
     class __attribute__((packed)) keys final {
     public:
       keys(void) : keys_{} {}
@@ -139,7 +174,7 @@ public:
         };
       };
 
-      keyboard_input(void) : report_id_(1), modifiers(0), reserved(0), keys{} {}
+      keyboard_input(void) : report_id_(1), modifiers(0), reserved(0) {}
       bool operator==(const keyboard_input& other) const { return (memcmp(this, &other, sizeof(*this)) == 0); }
       bool operator!=(const keyboard_input& other) const { return !(*this == other); }
 
@@ -153,12 +188,12 @@ public:
       uint8_t reserved __attribute__((unused));
 
     public:
-      uint8_t keys[6];
+      keys keys;
     };
 
     class __attribute__((packed)) consumer_input final {
     public:
-      consumer_input(void) : report_id_(2), keys{} {}
+      consumer_input(void) : report_id_(2) {}
       bool operator==(const consumer_input& other) const { return (memcmp(this, &other, sizeof(*this)) == 0); }
       bool operator!=(const consumer_input& other) const { return !(*this == other); }
 
@@ -166,12 +201,12 @@ public:
       uint8_t report_id_ __attribute__((unused));
 
     public:
-      uint8_t keys[6];
+      keys keys;
     };
 
     class __attribute__((packed)) apple_vendor_top_case_input final {
     public:
-      apple_vendor_top_case_input(void) : report_id_(3), keys{} {}
+      apple_vendor_top_case_input(void) : report_id_(3) {}
       bool operator==(const apple_vendor_top_case_input& other) const { return (memcmp(this, &other, sizeof(*this)) == 0); }
       bool operator!=(const apple_vendor_top_case_input& other) const { return !(*this == other); }
 
@@ -179,12 +214,12 @@ public:
       uint8_t report_id_ __attribute__((unused));
 
     public:
-      uint8_t keys[6];
+      keys keys;
     };
 
     class __attribute__((packed)) apple_vendor_keyboard_input final {
     public:
-      apple_vendor_keyboard_input(void) : report_id_(4), keys{} {}
+      apple_vendor_keyboard_input(void) : report_id_(4) {}
       bool operator==(const apple_vendor_keyboard_input& other) const { return (memcmp(this, &other, sizeof(*this)) == 0); }
       bool operator!=(const apple_vendor_keyboard_input& other) const { return !(*this == other); }
 
@@ -192,7 +227,7 @@ public:
       uint8_t report_id_ __attribute__((unused));
 
     public:
-      uint8_t keys[6];
+      keys keys;
     };
 
     class __attribute__((packed)) pointing_input final {
