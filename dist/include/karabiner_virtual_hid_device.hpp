@@ -90,6 +90,10 @@ public:
     public:
       modifiers(void) : modifiers_(0) {}
 
+      uint8_t get_raw_value(void) const {
+        return modifiers_;
+      }
+
       void clear(void) {
         modifiers_ = 0;
       }
@@ -113,6 +117,10 @@ public:
     class __attribute__((packed)) keys final {
     public:
       keys(void) : keys_{} {}
+
+      const uint8_t (&get_raw_value(void) const)[6] {
+        return keys_;
+      }
 
       void clear(void) {
         memset(keys_, 0, sizeof(keys_));
@@ -324,11 +332,11 @@ public:
   };
 
   static const char* get_virtual_hid_root_name(void) {
-    return "org_pqrs_driver_Karabiner_VirtualHIDDevice_VirtualHIDRoot_v060100";
+    return "org_pqrs_driver_Karabiner_VirtualHIDDevice_VirtualHIDRoot_v060200";
   }
 
   static const char* get_kernel_extension_name(void) {
-    return "org.pqrs.driver.Karabiner.VirtualHIDDevice.v060100.kext";
+    return "org.pqrs.driver.Karabiner.VirtualHIDDevice.v060200.kext";
   }
 };
 } // namespace pqrs
