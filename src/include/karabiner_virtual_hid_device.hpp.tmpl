@@ -90,6 +90,10 @@ public:
     public:
       modifiers(void) : modifiers_(0) {}
 
+      uint8_t get_raw_value(void) const {
+        return modifiers_;
+      }
+
       void clear(void) {
         modifiers_ = 0;
       }
@@ -113,6 +117,10 @@ public:
     class __attribute__((packed)) keys final {
     public:
       keys(void) : keys_{} {}
+
+      const uint8_t (&get_raw_value(void) const)[6] {
+        return keys_;
+      }
 
       void clear(void) {
         memset(keys_, 0, sizeof(keys_));

@@ -6,6 +6,7 @@
 TEST_CASE("modifiers") {
   {
     pqrs::karabiner_virtual_hid_device::hid_report::modifiers modifiers;
+    REQUIRE(modifiers.get_raw_value() == 0x0);
     REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::left_control));
     REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::left_shift));
     REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::left_option));
@@ -16,6 +17,7 @@ TEST_CASE("modifiers") {
     REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::right_command));
 
     modifiers.insert(pqrs::karabiner_virtual_hid_device::hid_report::modifier::left_control);
+    REQUIRE(modifiers.get_raw_value() == 0x1);
     REQUIRE(modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::left_control));
     REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::left_shift));
     REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::left_option));
@@ -26,6 +28,7 @@ TEST_CASE("modifiers") {
     REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::right_command));
 
     modifiers.insert(pqrs::karabiner_virtual_hid_device::hid_report::modifier::right_control);
+    REQUIRE(modifiers.get_raw_value() == 0x11);
     REQUIRE(modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::left_control));
     REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::left_shift));
     REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::left_option));
@@ -36,6 +39,7 @@ TEST_CASE("modifiers") {
     REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::right_command));
 
     modifiers.erase(pqrs::karabiner_virtual_hid_device::hid_report::modifier::left_shift);
+    REQUIRE(modifiers.get_raw_value() == 0x11);
     REQUIRE(modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::left_control));
     REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::left_shift));
     REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::left_option));
@@ -46,6 +50,7 @@ TEST_CASE("modifiers") {
     REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::right_command));
 
     modifiers.erase(pqrs::karabiner_virtual_hid_device::hid_report::modifier::left_control);
+    REQUIRE(modifiers.get_raw_value() == 0x10);
     REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::left_control));
     REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::left_shift));
     REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::left_option));
@@ -56,6 +61,7 @@ TEST_CASE("modifiers") {
     REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::right_command));
 
     modifiers.clear();
+    REQUIRE(modifiers.get_raw_value() == 0x0);
     REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::left_control));
     REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::left_shift));
     REQUIRE(!modifiers.exists(pqrs::karabiner_virtual_hid_device::hid_report::modifier::left_option));
@@ -70,33 +76,51 @@ TEST_CASE("modifiers") {
 TEST_CASE("keys") {
   {
     pqrs::karabiner_virtual_hid_device::hid_report::keys keys;
+    uint8_t expected[6];
+
     REQUIRE(keys.count() == 0);
+    memset(expected, 0, sizeof(expected));
+    REQUIRE(memcmp(keys.get_raw_value(), expected, sizeof(expected)) == 0);
 
     keys.insert(10);
     REQUIRE(keys.count() == 1);
     REQUIRE(keys.exists(10));
     REQUIRE(!keys.exists(20));
+    expected[0] = 10;
+    REQUIRE(memcmp(keys.get_raw_value(), expected, sizeof(expected)) == 0);
 
     keys.insert(10);
     REQUIRE(keys.count() == 1);
+    REQUIRE(memcmp(keys.get_raw_value(), expected, sizeof(expected)) == 0);
 
     keys.erase(20);
     REQUIRE(keys.count() == 1);
+    REQUIRE(memcmp(keys.get_raw_value(), expected, sizeof(expected)) == 0);
 
     keys.erase(10);
     REQUIRE(keys.count() == 0);
+    expected[0] = 0;
+    REQUIRE(memcmp(keys.get_raw_value(), expected, sizeof(expected)) == 0);
 
     keys.erase(10);
     REQUIRE(keys.count() == 0);
+    REQUIRE(memcmp(keys.get_raw_value(), expected, sizeof(expected)) == 0);
 
     keys.insert(10);
     REQUIRE(keys.count() == 1);
+    expected[0] = 10;
+    REQUIRE(memcmp(keys.get_raw_value(), expected, sizeof(expected)) == 0);
 
     keys.insert(20);
     REQUIRE(keys.count() == 2);
+    expected[1] = 20;
+    REQUIRE(memcmp(keys.get_raw_value(), expected, sizeof(expected)) == 0);
 
     keys.clear();
     REQUIRE(keys.count() == 0);
+    expected[0] = 0;
+    expected[1] = 0;
+    REQUIRE(memcmp(keys.get_raw_value(), expected, sizeof(expected)) == 0);
   }
 
   {
