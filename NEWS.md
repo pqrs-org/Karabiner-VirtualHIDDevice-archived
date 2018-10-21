@@ -1,5 +1,10 @@
 # Changelog
 
+## Version 6.9.0
+
+- LED has been supported on VirtualHIDKeyboard. <br>
+  A HID report {kHIDPage_LEDs, kHIDUsage_LED_CapsLock} will be posted to user space when the VirtualHIDKeyboard LED state is changed.
+
 ## Version 6.8.0
 
 - The kext binary has been built on macOS 10.12 in order to avoid kextload issue on macOS 10.12.
