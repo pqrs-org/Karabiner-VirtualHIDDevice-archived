@@ -1,21 +1,22 @@
-[![Build Status](https://travis-ci.org/tekezo/Karabiner-VirtualHIDDevice.svg?branch=master)](https://travis-ci.org/tekezo/Karabiner-VirtualHIDDevice)
-[![License](https://img.shields.io/badge/license-Public%20Domain-blue.svg)](https://github.com/tekezo/Karabiner-VirtualHIDDevice/blob/master/LICENSE.md)
+[![Build Status](https://travis-ci.org/pqrs-org/Karabiner-VirtualHIDDevice.svg?branch=master)](https://travis-ci.org/pqrs-org/Karabiner-VirtualHIDDevice)
+[![License](https://img.shields.io/badge/license-Public%20Domain-blue.svg)](https://github.com/pqrs-org/Karabiner-VirtualHIDDevice/blob/master/LICENSE.md)
 
 # Karabiner-VirtualHIDDevice
 
 Karabiner-VirtualHIDDevice is a virtual HID device driver for macOS.
 
-## System requirements
+## Supported systems
 
 - macOS Sierra (10.12)
 - macOS High Sierra (10.13)
 - macOS Mojave (10.14)
+- macOS Catalina (10.15)
 
 ## How to build
 
 System requirements:
 
-- macOS 10.13+
+- macOS 10.13
 - Xcode 8.3.3 (required for macOS 10.12 support)
 - Command Line Tools for Xcode
 
@@ -24,7 +25,7 @@ System requirements:
 Clone the source from github.
 
 ```shell
-git clone --depth 1 https://github.com/tekezo/Karabiner-VirtualHIDDevice.git
+git clone --depth 1 https://github.com/pqrs-org/Karabiner-VirtualHIDDevice.git
 ```
 
 ### Step 2: Building a package
